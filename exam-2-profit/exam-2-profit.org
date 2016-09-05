@@ -1,0 +1,70 @@
+#+ASSIGNMENT: exam-2-profit
+
+#+POINTS: 4
+#+CATEGORY: exam2
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-11-04 Wed 10:20>
+
+Compound X with concentration of $C_{X0} = 2.5 \pm 0.2 $kmol / m$^3$
+at a flow rate of 12 \pm 1 m$^3$/min is converted to Y in a plug
+flow reactor. The rate law is $r= k C_X$, with $k = 30 \pm
+5$/min. The value of Y is \$1.5/kmol. The cost of operation is
+$2.50 per minute per m$^3$. Estimate the 95% confidence interval
+on the profit if the reactor is 1.5 m$^3$ in volume. Assume the cost
+of X is negligible, and there is no separation cost.
+
+Also assume the reaction is $X \rightarrow Y$.
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+N = 10000
+# Set the parameters with normal distribution
+Cx0 = np.random.normal(2.5,0.2,N) # kmol/m^3
+v0 = np.random.normal(12.0,1.0,N) # m^3/min
+k = np.random.normal(30.0,5.0,N)  # 1/min
+V = 1.5  # m^3
+
+valy = 1.5 # $/kmol
+costr = 2.5 # $/m^3
+sol = np.empty(Cx0.shape)
+for i in range(N):
+    Fx0 = Cx0[i]*v0[i]        
+    def func1(Fx,V):
+        Cx = Fx/v0[i]
+        rx = -k[i]*Cx
+        return rx
+    Vspan = np.linspace(0,V)
+    ans = odeint(func1,Fx0,Vspan) # Fx
+    Fy = Fx0-ans[-1]  # Fy at exit
+    profit = valy*Fy - V*costr # Profit = Value - Cost
+    sol[i] = profit
+    
+plt.hist(sol,20)
+plt.xlabel('Profit [$/min]')
+plt.savefig('figure1.png')
+
+mean = np.mean(sol)
+std = np.std(sol)
+# The 95% confidence interval of a normal distribution is [mean-1.96*std, mean+1.96std]
+interval = [mean-1.96*std,mean+1.96*std]
+print('The mean of profit is {} $/min'.format(mean))
+print('The 95% confidence interval on profit is {}'.format(interval))
+
+#[[.\figure1.png]]
+#+END_SRC
+
+#+RESULTS:
+: The mean of profit is 39.8745215061 $/min
+: The 95% confidence interval on profit is [30.313205457407722, 49.435837554869835]
+
+From the figure we can see the profit distribution is still a normal distribution, so this approach for interval is accessible.
+
+#+TURNED-IN: Wed Nov  4 10:18:18 2015
+
+* Grade
+#+technical: A++
+#+presentation: A+
+#+GRADE: 0.985
+#+GRADED-BY: Irem Sen

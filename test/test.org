@@ -1,0 +1,8 @@
+#+ASSIGNMENT: test
+#+POINTS: 0
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-11-03 Tue>
+
+Test assignment.
+#+TURNED-IN: Tue Nov  3 16:22:57 2015

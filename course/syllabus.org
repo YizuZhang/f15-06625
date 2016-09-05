@@ -1,0 +1,668 @@
+#+TITLE: Syllabus for  06-625 Chemical and Reactive Systems
+#+AUTHOR: John Kitchin
+#+DATE: Fall 2015
+#+STARTUP: showall
+#+TODO: TODO COLLECTED | GRADED
+#+TODO: TODO | DONE
+
+* Course details
+  :PROPERTIES:
+  :VISIBILITY: folded
+  :END:
+
+- Course: 06-625 Chemical and Reactive Systems
+
+- Instructor: Professor Kitchin (jkitchin@andrew.cmu.edu)
+  - Doherty Hall A207F (Office hours by appointment)
+
+- Teaching assistants (Doherty Hall A204)
+  - Irem Sen irems@andrew.cmu.edu
+  - Hari Thirumalai (hthiruma@andrew.cmu.edu)
+  - Office hours by appointment
+
+- We will not be using a textbook. The course notes will be provided through Emacs. You are welcome to augment your studies from other textbooks on chemical reaction engineering. Here are some good ones.
+
+1. Elements of Chemical Reaction Engineering, Fourth Edition, H. Scott Fogler, Prentice Hall.
+  - This is one of the most common reaction engineering text books. Many of the examples in the notes were adapted from this book. It has many good conceptual explanations, but it lacks the computational emphasis that this course uses.
+
+2. Chemical Reactor Analysis and Design Fundamentals, James B. Rawlings and John G. Ekerdt, Nob Hill Publishing.
+  - This book is very numerical problem-solving oriented.
+
+3. The Engineering of Chemical Reactions, Lanny D. Schmidt, Oxford University Press, 1998.
+
+4. Chemical Reactor Analysis and Design, 3rd Edition, Froment, Bischoff De Wilde, Wiley.
+  - This is a more advanced book, sometimes used in graduate reactor design courses.
+
+This course will not have a "website". All course materials will be accessed through Emacs (M-x techela). You should probably review these notes on using emacs: [[file:emacs.org]].
+
+** Course description - Chemical and Reactive Systems
+
+This course will cover chemical kinetics and chemical reaction engineering with an emphasis on using computational tools to solve difficult problems. Topics will include reaction rates, stoichiometry, equilibrium and multiple reactions. Determination of rate law parameters and rate laws will be covered. Typical reactors including continuously stirred tank reactors, plug flow reactors and membrane reactors will be studied. The effects of heat and mass transfer on reactor design will be considered. Issues in catalysis will be presented and discussed. Students should expect to use numerical software extensively in the course.
+
+** Course objectives
+
+After completing this course you will be able to use Python to solve problems involving the:
+
+*** Design of reactors for multiple reactions				:LO1:
+This includes correctly using stoichiometry, the correct mole balance, selection of the best reactor type to achieve optimal selectivity, and economic considerations in reactor design.
+
+*** Design of reactors with pressure drops				:LO2:
+This includes the role of pressure drop in modulating volumetric flow and gas phase concentrations and the effect of that on the reactor design.
+
+*** Derivation of kinetic parameters from experimental data including uncertainty of the parameters :LO3:
+This will include linear and nonlinear regression, with confidence intervals. Analysis of kinetic measurements, and experimental design.
+
+*** Determination of the effects of parameter uncertainty on reactor design :LO4:
+This will consider the role of uncertainty in parameters on design outcomes. For example, how probable is it for a reactor to meet a design objective given uncertainty in the parameters in the design equations?
+
+*** Design of reactors where mass-transport effects are important	:LO5:
+This will include the use of effectiveness factors, and multiphase reaction engineering.
+
+*** Design of non-isothermal reactors					:LO6:
+This will include accounting for changing temperatures on reaction rates, safety analysis of reactor conditions
+
+
+** Grading
+
+#+caption: Categories and weights for graded
+#+tblname: categories
+| Category      | weight |
+|---------------+--------|
+| homework      |    0.2 |
+| quiz          |   0.25 |
+| exam1         |    0.1 |
+| exam2         |   0.15 |
+| exam3         |    0.2 |
+| participation |    0.1 |
+
+Homeworks will be assigned one to three times a week. Each assignment will typically be one problem that should take 30-90 minutes to complete.
+
+Quizzes will be given in class. You should be prepared to take a quiz at any time. These will typically be short, timed problems.
+
+Exams will be scheduled and given during class. You will need your computer for these.
+
+Your participation grade will be determined by the fraction of class exercises you participate in. You will need your computer for these.
+
+You should bring your computer to class every day. You will need it to follow the lecture notes, to participate in class exercises, and to complete quizzes and exams. You are responsible for ensuring the battery is charged, that you can connect to the internet, and that the software required for the course is installed and working. There will not be any makeup assignments.
+
+Late assignments will automatically lose 50% of their points. Late assignments can only be turned in by email.
+
+*** Grading criteria
+
+You are transitioning into a young professional at this point. That means assignments are done professionally too. In addition to the technical correctness of your work, we will also be assessing the professionalism with which it is presented. Each assignment will show the rubric it will be graded with at the top of the file.
+
+There will be a straight scale (no curve) so you will always know exactly what your grade is at all times. Each problem will be graded considering the approach used, the correctness of the answer, the neatness and quality of presentation, etc... Each category of the rubric will be given a letter grade that indicates your level of performance in that category.
+
+"A" work has the following characteristics: The correct approach is used and the problem is set up correctly. The work is not over-simplified and it is easy to see it is done correctly. Any assumptions made were stated and justified. The answers are correct or only the most trivial errors are present, and were identified by the student. All of the correct units were used. The presentation is complete, clear, logical, neat and in order. Error analysis was performed if appropriate. Any figures used have properly labeled axes with units, and a legend if there is more than one curve. Essentially everything that should have been done was done and done correctly. This is the kind of work an employer wants their employees to do, and the kind of work you will be promoted for doing. You should be proud of this work.
+
+"B" work is deficient in one or more of the properties of "A" work. It might be basically right, but essential details are missing such as units, or the presentation is sloppy. You will get by with this kind of work, but you should not expect to be praised for it.
+
+"C" quality work is deficient in more than two of the properties of "A" work. You would probably not get fired for this kind of work, but you may be notified you need to improve and you should not expect any kind of promotion. This is the bare minimum of expected performance.
+
+"D" work is not considered acceptable performance. Repeat offenses could lead to the loss of your job.
+
+"R" work is totally unacceptable performance. You will be fired.
+
+plus/minus modifiers will be used to provide finer grained grades.
+
+Each problem will have a point value associated with it. The letter grade you get serves as a multiplier on that point value. The multipliers are:
+
+| Lettergrade | multiplier |
+|-------------+------------|
+| A++         |          1 |
+| A+          |       0.95 |
+| A           |        0.9 |
+| A-          |       0.85 |
+| A/B         |        0.8 |
+| B+          |       0.75 |
+| B           |        0.7 |
+| B-          |       0.65 |
+| B/C         |        0.6 |
+| C+          |       0.55 |
+| C           |        0.5 |
+| C-          |       0.45 |
+| C/D         |        0.4 |
+| D+          |       0.35 |
+| D           |        0.3 |
+| D-          |       0.25 |
+| D/R         |        0.2 |
+| R+          |       0.15 |
+| R           |        0.1 |
+| R-          |       0.05 |
+| R- -        |        0.0 |
+
+At the end of the semester I will calculate what fraction of the possible points you have earned, and your grade will be based on this distribution:
+
+| 80% >= grade         | A |
+| 60% >= grade < 80    | B |
+| 40% >= grade < 60    | C |
+| 20% >= grade < 40    | D |
+| grade < 20%          | R |
+
+Note that the standard grade for correct work is an "A", which is not equal to "100%". It is worth 90%, which is well above the cutoff for an A. The A+ and A++ designations are reserved for work that is well above "correct".
+
+** Academic honesty
+All work is expected to be your original work. You may work with class members to solve the homework problems, but you must turn in your own solutions. It is cheating to turn in someone else's work as your own. If you use code from the internet or the course notes, you should note this in your solution. Duplicated assignments (e.g. two students who turn in the same work) will receive zeros and a warning. Repeat offenses will be reported as academic dishonesty.
+
+When in doubt, review this website: http://www.cmu.edu/academic-integrity/, and ask if anything is unclear /before/ you get in trouble. In particular see these sites:
+  - http://www.cmu.edu/academic-integrity/collaboration/index.html
+  - http://www.cmu.edu/academic-integrity/cheating/index.html
+  - http://www.cmu.edu/academic-integrity/plagiarism/index.html
+
+** Religious holidays
+We will accommodate religious holidays when possible. If your work will be affected by a religious holiday, you must inform Professor Kitchin as early as possible to work out an accommodation in advance.
+
+* Announcements
+* Class schedule
+  :PROPERTIES:
+  :CUSTOM_ID: schedule
+  :END:
+The tentative course schedule is here. It may change.
+** DONE [2015-08-31 Mon] Review syllabus, software
+   CLOSED: [2015-09-02 Wed 06:53]
+** DONE [2015-09-02 Wed] [[./rxns-book/introduction.org]]
+   CLOSED: [2015-09-08 Tue 21:31]
+** DONE [2015-09-07 Mon] Labor day *NO CLASS*  Review this file:emacs.org
+   CLOSED: [2015-09-08 Tue 21:31]
+** DONE [2015-09-09 Wed] [[./rxns-book/reactions+extent.org]]
+   CLOSED: [2015-09-13 Sun 10:15]
+** DONE [2015-09-14 Mon] [[./rxns-book/rates+rate-laws.org]]
+   CLOSED: [2015-09-21 Mon 05:55]
+** DONE [2015-09-16 Wed] [[./rxns-book/mole-balance.org]]
+   CLOSED: [2015-09-21 Mon 05:55]
+** DONE [2015-09-21 Mon] [[./rxns-book/complex-mole-balances.org]]
+   CLOSED: [2015-09-23 Wed 06:26]
+** DONE [2015-09-23 Wed] [[./rxns-book/transient-cstr-mss.org]]
+   CLOSED: [2015-09-23 Wed 21:03]
+** DONE [2015-09-28 Mon] [[./rxns-book/misc-reactor-mole-balance.org]]
+   CLOSED: [2015-09-30 Wed 20:35]
+** DONE [2015-09-30 Wed] [[./rxns-book/wrapping-up-introduction.org]]
+   CLOSED: [2015-09-30 Wed 20:35]
+** DONE [2015-10-05 Mon] [[./rxns-book/multiple-rxns-1.org]]
+   CLOSED: [2015-10-05 Mon 11:04]
+** DONE [2015-10-07 Wed] EXAM 1 (will cover material through 9/30)
+   CLOSED: [2015-10-11 Sun 15:54]
+** DONE [2015-10-12 Mon] [[./rxns-book/multiple-rxns-2.org]]
+   CLOSED: [2015-10-14 Wed 06:03]
+** DONE [2015-10-14 Wed] [[./rxns-book/parameter-estimation.org]]
+   CLOSED: [2015-10-18 Sun 12:49]
+** DONE [2015-10-19 Mon] [[./rxns-book/parameter-estimation-2.org]]
+   CLOSED: [2015-10-21 Wed 06:46]
+** DONE [2015-10-21 Wed] [[./rxns-book/mechanism-determination.org]]
+   CLOSED: [2015-10-24 Sat 08:14]
+** [2015-10-26 Mon] *NO CLASS*
+** DONE [2015-10-28 Wed] [[./rxns-book/engineering-applications.org]]
+   CLOSED: [2015-10-28 Wed 16:37]
+** DONE [2015-11-02 Mon] [[./rxns-book/mass-transfer-1.org]]
+   CLOSED: [2015-11-15 Sun 18:15]
+** DONE [2015-11-04 Wed] EXAM 2 (cumulative through 10/28)
+   CLOSED: [2015-11-15 Sun 18:15]
+** DONE [2015-11-09 Mon] *AICHE NO CLASS*
+   CLOSED: [2015-11-15 Sun 18:15]
+** DONE [2015-11-11 Wed] *AICHE NO CLASS*
+   CLOSED: [2015-11-15 Sun 18:15]
+** DONE [2015-11-16 Mon] [[./rxns-book/generalized-effectiveness-factors.org]]
+   CLOSED: [2015-11-17 Tue 21:23]
+** DONE [2015-11-18 Wed] [[./rxns-book/non-isothermal-reactor-design.org]]
+   CLOSED: [2015-11-22 Sun 16:44]
+** DONE [2015-11-23 Mon] [[./rxns-book/non-isothermal-batch.org]]
+   CLOSED: [2015-11-29 Sun 20:17]
+** DONE [2015-11-25 Wed] *NO CLASS THANKSGIVING*
+   CLOSED: [2015-11-29 Sun 20:17]
+** DONE [2015-11-30 Mon] [[./rxns-book/non-isothermal-cstr.org]]
+   CLOSED: [2015-12-02 Wed 07:02]
+** DONE [2015-12-02 Wed] [[./rxns-book/non-isothermal-pfr.org]]
+   CLOSED: [2015-12-06 Sun 18:30]
+** [2015-12-07 Mon] [[./rxns-book/nonisothermal-mult-rxns.org]]
+** [2015-12-09 Wed] EXAM 3 (Cumulative through 12/07)
+
+* Assignments
+  :PROPERTIES:
+  :CUSTOM_ID: assignments
+  :END:
+
+  [[elisp:tq-agenda][Upcoming assignments]]
+
+** GRADED assignment:introduction     :assignment:
+   CLOSED: [2015-09-07 Mon 06:45] DEADLINE: <2015-09-02 Wed>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   2
+   :CUSTOM_ID: introduction
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+** GRADED assignment:ex-mass-conservation :assignment:
+   CLOSED: [2015-09-09 Wed 16:49] DEADLINE: <2015-09-09 Wed>
+   :PROPERTIES:
+   :CATEGORY: participation
+   :POINTS:   1
+   :CUSTOM_ID: ex-mass-conservation
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+** GRADED assignment:reflection-1     :assignment:
+   CLOSED: [2015-09-12 Sat 10:11] DEADLINE: <2015-09-09 Wed>
+   :PROPERTIES:
+   :CATEGORY: participation
+   :POINTS:   1
+   :CUSTOM_ID: reflection-1
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+** GRADED assignment:reflection-2     :assignment:
+   CLOSED: [2015-09-14 Mon 21:29] DEADLINE: <2015-09-14 Mon>
+   :PROPERTIES:
+   :CATEGORY: participation
+   :POINTS:   1
+   :CUSTOM_ID: reflection-2
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+** GRADED assignment:nla-1	      :assignment:
+   CLOSED: [2015-09-16 Wed 16:55] DEADLINE: <2015-09-15 Tue>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   1
+   :CUSTOM_ID: nla-1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:nla-1
+
+** GRADED assignment:ode-1					 :assignment:
+   CLOSED: [2015-09-19 Sat 16:12] DEADLINE: <2015-09-17 Thu>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   2
+   :CUSTOM_ID: ode-1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:ode-1
+
+** GRADED assignment:creative-1	      :assignment:
+   CLOSED: [2015-09-22 Tue 21:14] DEADLINE: <2015-09-18 Fri>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   3
+   :CUSTOM_ID: creative-1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+** GRADED assignment:ex-mol-change				 :assignment:
+   CLOSED: [2015-09-22 Tue 15:42] DEADLINE: <2015-09-21 Mon>
+   :PROPERTIES:
+   :CATEGORY: participation
+   :POINTS:   2
+   :CUSTOM_ID: ex-mol-change
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+** GRADED assignment:ode-2					 :assignment:
+   CLOSED: [2015-09-23 Wed 13:27] DEADLINE: <2015-09-21 Mon>
+   :PROPERTIES:
+   :CATEGORY: participation
+   :POINTS:   1
+   :CUSTOM_ID: ode-2
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+** GRADED assignment:mol-change-pfr				 :assignment:
+   CLOSED: [2015-09-24 Thu 15:54] DEADLINE: <2015-09-22 Tue>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   2
+   :CUSTOM_ID: mol-change-pfr
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+solution:mol-change-pfr
+
+
+** GRADED assignment:const-p-batch				 :assignment:
+   CLOSED: [2015-09-28 Mon 14:12] DEADLINE: <2015-09-24 Thu>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   3
+   :CUSTOM_ID: const-p-batch
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:const-p-batch
+
+** GRADED assignment:pdrop-consultant :assignment:
+   CLOSED: [2015-09-27 Sun 18:20] DEADLINE: <2015-09-25 Fri>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   2
+   :CUSTOM_ID: pdrop-consultant
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:pdrop-consultant
+
+** GRADED assignment:quiz-1	      :assignment:
+   CLOSED: [2015-09-23 Wed 14:45] DEADLINE: <2015-09-23 Wed>
+   :PROPERTIES:
+   :CATEGORY: quiz
+   :POINTS:   0.01
+   :CUSTOM_ID: quiz-1
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+solution:quiz-1
+
+
+** GRADED assignment:cstr-mult-ss				 :assignment:
+   CLOSED: [2015-10-07 Wed 14:47] DEADLINE: <2015-09-29 Tue>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   4
+   :CUSTOM_ID: cstr-mult-ss
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:cstr-mult-ss
+
+** GRADED assignment:membrane-pressure				 :assignment:
+   CLOSED: [2015-10-05 Mon 13:31] DEADLINE: <2015-10-01 Thu 23:59>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   4
+   :CUSTOM_ID: membrane-pressure
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+solution:membrane-pressure
+
+
+** GRADED assignment:cstr-pfr-1					 :assignment:
+   CLOSED: [2015-11-05 Thu 12:03] DEADLINE: <2015-10-02 Fri 23:59>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   4
+   :CUSTOM_ID: cstr-pfr-1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+solution:cstr-pfr-1
+
+** GRADED assignment:quiz-2	      :assignment:
+   CLOSED: [2015-10-05 Mon 20:53] DEADLINE: <2015-10-05 Mon 10:20>
+   :PROPERTIES:
+   :CATEGORY: quiz
+   :POINTS:   2
+   :CUSTOM_ID: quiz-2
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:quiz-2
+
+** GRADED assignment:exam-1-mc	      :assignment:
+   CLOSED: [2015-10-07 Wed 16:01] DEADLINE: <2015-10-07 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam1
+   :POINTS:   5
+   :CUSTOM_ID: exam-1-mc
+   :RUBRIC:   multiple-choice
+   :END:
+
+solution:exam-1-mc
+
+** GRADED assignment:exam-1-2					 :assignment:
+   CLOSED: [2015-10-12 Mon 13:27] DEADLINE: <2015-10-07 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam1
+   :POINTS:   6
+   :CUSTOM_ID: exam-1-2
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:exam-1-2
+
+** GRADED assignment:exam-1-3					 :assignment:
+   CLOSED: [2015-10-08 Thu 18:58] DEADLINE: <2015-10-07 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam1
+   :POINTS:   4
+   :CUSTOM_ID: exam-1-3
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:exam-1-3
+
+** GRADED assignment:exam-1-4	      :assignment:
+   CLOSED: [2015-10-10 Sat 16:32] DEADLINE: <2015-10-07 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam1
+   :POINTS:   4
+   :CUSTOM_ID: exam-1-4
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:exam-1-4
+
+** GRADED assignment:exam-1-5					 :assignment:
+   CLOSED: [2015-10-13 Tue 18:31] DEADLINE: <2015-10-07 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam1
+   :POINTS:   5
+   :CUSTOM_ID: exam-1-5
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:exam-1-5
+
+** GRADED assignment:survey	      :assignment:
+   CLOSED: [2015-10-10 Sat 18:17] DEADLINE: <2015-10-08 Thu>
+   :PROPERTIES:
+   :CATEGORY: participation
+   :POINTS:   2
+   :CUSTOM_ID: survey
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+** GRADED assignment:cstr-mult-reactions			 :assignment:
+   CLOSED: [2015-10-25 Sun 16:59] DEADLINE: <2015-10-21 Wed 23:59>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   3
+   :CUSTOM_ID: cstr-mult-reactions
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:cstr-mult-reactions
+
+** GRADED assignment:equil-1					 :assignment:
+   CLOSED: [2015-10-28 Wed 17:10] DEADLINE: <2015-10-21 Wed 23:59>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   3
+   :CUSTOM_ID: equil-1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:equil-1
+
+** GRADED assignment:nlr-1					 :assignment:
+   CLOSED: [2015-11-03 Tue 15:55] DEADLINE: <2015-10-22 Thu 23:59>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   3
+   :CUSTOM_ID: nlr-1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:nlr-1
+
+** GRADED assignment:fit-1					 :assignment:
+   CLOSED: [2015-10-29 Thu 09:49] DEADLINE: <2015-10-24 Sat 23:59>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   4
+   :CUSTOM_ID: fit-1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:fit-1
+
+** GRADED assignment:unc-conv-cstr				 :assignment:
+   CLOSED: [2015-11-03 Tue 15:32] DEADLINE: <2015-10-29 Thu 23:59>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   4
+   :CUSTOM_ID: unc-conv-cstr
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:unc-conv-cstr
+
+** GRADED assignment:cstr-kinetics				 :assignment:
+   CLOSED: [2015-11-02 Mon 11:00] DEADLINE: <2015-10-29 Thu 23:59>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   4
+   :CUSTOM_ID: cstr-kinetics
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:cstr-kinetics
+
+** GRADED assignment:exam-2-debug     :assignment:
+   CLOSED: [2015-11-15 Sun 19:36] DEADLINE: <2015-11-04 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam2
+   :POINTS:   4
+   :CUSTOM_ID: exam-2-debug
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:exam-2-debug
+
+** GRADED assignment:exam-2-fit1      :assignment:
+   CLOSED: [2015-11-07 Sat 22:58] DEADLINE: <2015-11-04 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam2
+   :POINTS:   4
+   :CUSTOM_ID: exam-2-fit1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:exam-2-fit1
+
+** GRADED assignment:exam-2-mc	      :assignment:
+   CLOSED: [2015-11-04 Wed 18:28] DEADLINE: <2015-11-04 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam2
+   :POINTS:   6
+   :CUSTOM_ID: exam-2-mc
+   :RUBRIC:   multiple-choice
+   :END:
+
+solution:exam-2-mc
+
+
+** GRADED assignment:exam-2-profit    :assignment:
+   CLOSED: [2015-11-24 Tue 14:01] DEADLINE: <2015-11-04 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam2
+   :POINTS:   4
+   :CUSTOM_ID: exam-2-profit
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:exam-2-profit
+
+** GRADED assignment:creative-2	      :assignment:
+   CLOSED: [2015-11-27 Fri 19:50] DEADLINE: <2015-11-23 Mon>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   4
+   :CUSTOM_ID: creative-2
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+** GRADED assignment:thiele-1					 :assignment:
+   CLOSED: [2015-11-23 Mon 11:11] DEADLINE: <2015-11-18 Wed>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   3
+   :CUSTOM_ID: thiele-1
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:thiele-1
+
+** GRADED assignment:coolant-T	      :assignment:
+   CLOSED: [2015-11-24 Tue 14:10] DEADLINE: <2015-11-23 Mon>
+   :PROPERTIES:
+   :CATEGORY: participation
+   :POINTS:   2
+   :CUSTOM_ID: coolant-T
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+** GRADED assignment:eb-batch					 :assignment:
+   CLOSED: [2015-12-08 Tue 19:39] DEADLINE: <2015-12-02 Wed>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   4
+   :CUSTOM_ID: eb-batch
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:eb-batch
+
+** GRADED assignment:eb-inerts					 :assignment:
+   CLOSED: [2015-12-07 Mon 16:57] DEADLINE: <2015-12-03 Thu>
+   :PROPERTIES:
+   :CATEGORY: homework
+   :POINTS:   3
+   :CUSTOM_ID: eb-inerts
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+solution:eb-inerts
+
+** GRADED assignment:exam-3-mc	      :assignment:
+   CLOSED: [2015-12-09 Wed 16:44] DEADLINE: <2015-12-09 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam3
+   :POINTS:   6
+   :CUSTOM_ID: exam-3-mc
+   :RUBRIC:   (("participation" . 1.0))
+   :END:
+
+** GRADED assignment:exam-3-mt	      :assignment:
+   CLOSED: [2015-12-16 Wed 11:57] DEADLINE: <2015-12-09 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam3
+   :POINTS:   5
+   :CUSTOM_ID: exam-3-mt
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+** GRADED assignment:exam-3-mrxns     :assignment:
+   CLOSED: [2015-12-15 Tue 15:53] DEADLINE: <2015-12-09 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam3
+   :POINTS:   5
+   :CUSTOM_ID: exam-3-mrxns
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+** GRADED assignment:exam-3-eb-cstr				 :assignment:
+   CLOSED: [2015-12-13 Sun 12:27] DEADLINE: <2015-12-09 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam3
+   :POINTS:   5
+   :CUSTOM_ID: exam-3-eb-cstr
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:
+
+** GRADED assignment:exam-3-final     :assignment:
+   CLOSED: [2015-12-15 Tue 15:53] DEADLINE: <2015-12-09 Wed 10:20>
+   :PROPERTIES:
+   :CATEGORY: exam3
+   :POINTS:   0
+   :CUSTOM_ID: exam-3-final
+   :RUBRIC:   (("technical" . 0.7) ("presentation" . 0.3))
+   :END:

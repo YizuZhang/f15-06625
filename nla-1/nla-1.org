@@ -1,0 +1,50 @@
+#+ASSIGNMENT: nla-1
+#+POINTS: 1
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-15 Tue>
+
+The concentration of species A in a batch reactor is given as this function of time:
+
+\(1 / C_A = k t + 1 / C_{A0}\)
+
+Assume that $k = 0.1$ L /mol /min, and that $C_{A0}$ = 2.5 mol / L at $t=0$.
+
+elisp:org-toggle-latex-overlays
+
+* Analytically solve for the time it takes to reach C_A=0.5 mol /L
+
+\(1 / C_A = k t + 1 / C_{A0}\)
+To find out the time it takes to reach \(C_A = 0.5 mol/L\)
+we can define a function as \(F(t) = 1/C_{A0}+ k t-1/C_A\)
+then use fsolve to find out the t for F(t)=0.
+
+* Use python and fsolve to solve for the time.
+  #+BEGIN_SRC python
+from scipy.optimize import fsolve
+k = 0.1    # L/mol/min
+C_A0 = 2.5 # mol/L
+C_A = 0.5  # mol/L
+
+def func(t):
+    return k*t + 1/C_A0 - 1/C_A
+guess = 0  #min
+ans, =fsolve(func, guess)
+print ('When t={0} min, C_A=0.5 mol/L'.format(ans))
+    
+  #+END_SRC
+
+  #+RESULTS:
+  : When t=16.0 min, C_A=0.5 mol/L
+
+#+TURNED-IN: Tue Sep 15 17:45:13 2015
+
+* feedback
+[[elisp:(goto-char 584)][(harithirumalai) line 19:]] not solved analytically.
+
+
+* Grade
+#+technical: A/B
+#+presentation: A
+#+GRADE: 0.830
+#+GRADED-BY: Hari Thirumalai

@@ -1,0 +1,55 @@
+#+ASSIGNMENT: nla-1
+#+POINTS: 1
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-15 Tue>
+
+The concentration of species A in a batch reactor is given as this function of time:
+
+\(1 / C_A = k t + 1 / C_{A0}\)
+
+Assume that $k = 0.1$ L /mol /min, and that $C_{A0}$ = 2.5 mol / L at $t=0$.
+
+elisp:org-toggle-latex-overlays
+
+* Analytically solve for the time it takes to reach C_A=0.5 mol /L
+
+We can solve for \(t = (1 / Ca - 1 / CA0) / k \)
+
+#+BEGIN_SRC python
+k = 0.1
+Ca = 0.5
+Ca0 = 2.5
+
+print('t = {0} min'.format((1.0 / Ca - 1 / Ca0) / k))
+#+END_SRC
+
+#+RESULTS:
+: t = 16.0 min
+
+* Use python and fsolve to solve for the time.
+To use fsolve, we need to create a function that is equal to zero at the solution. From the original statement, we have:
+
+\( 0 = f(t) = 1 / C_A =- k t - 1 / C_{A0}\)
+
+Here is the implementation:
+
+#+BEGIN_SRC python
+from scipy.optimize import fsolve
+
+k = 0.1
+Ca = 0.5
+Ca0 = 2.5
+
+def objective(t):
+    z = 1 / Ca - k * t - 1 / Ca0
+    return z
+
+guess = 12
+ans, = fsolve(objective, guess)
+
+print('t = {0} min'.format(ans))
+#+END_SRC
+
+#+RESULTS:
+: t = 16.0 min

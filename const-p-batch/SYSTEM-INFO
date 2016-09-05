@@ -1,0 +1,42 @@
+Created on: Thu Sep 24 17:34:33 2015
+Name: 
+Userid = tianyug1
+Email: Gao@GAO-PC
+System name: GAO-PC
+windows-nt
+Windows IP Configuration
+
+
+Wireless LAN adapter Wireless Network Connection:
+
+   Connection-specific DNS Suffix  . : wv.cc.cmu.edu
+   Link-local IPv6 Address . . . . . : fe80::1d7e:3504:afab:954%13
+   IPv4 Address. . . . . . . . . . . : 128.237.135.1
+   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+   Default Gateway . . . . . . . . . : 128.237.128.1
+
+Ethernet adapter Local Area Connection:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : cmu.edu
+
+Tunnel adapter 6TO4 Adapter:
+
+   Connection-specific DNS Suffix  . : wv.cc.cmu.edu
+   IPv6 Address. . . . . . . . . . . : 2002:80ed:8701::80ed:8701
+   Default Gateway . . . . . . . . . : 
+
+Tunnel adapter isatap.wv.cc.cmu.edu:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : wv.cc.cmu.edu
+
+Tunnel adapter Local Area Connection* 12:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+
+Tunnel adapter isatap.cmu.edu:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 

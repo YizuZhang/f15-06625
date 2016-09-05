@@ -1,0 +1,39 @@
+Created on: Sat Oct 24 21:53:34 2015
+Name: 
+Userid = tianyug1
+Email: Gao@GAO-PC
+System name: GAO-PC
+windows-nt
+Windows IP Configuration
+
+
+Wireless LAN adapter Wireless Network Connection:
+
+   Connection-specific DNS Suffix  . : hsd1.pa.comcast.net.
+   IPv6 Address. . . . . . . . . . . : 2601:547:f03:e130:1d7e:3504:afab:954
+   Temporary IPv6 Address. . . . . . : 2601:547:f03:e130:9dc6:a42e:d93c:b227
+   Link-local IPv6 Address . . . . . : fe80::1d7e:3504:afab:954%13
+   IPv4 Address. . . . . . . . . . . : 10.0.0.3
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : fe80::200:caff:fe11:2233%13
+                                       10.0.0.1
+
+Ethernet adapter Local Area Connection:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : cmu.edu
+
+Tunnel adapter isatap.cmu.edu:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+
+Tunnel adapter Local Area Connection* 12:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : 
+
+Tunnel adapter isatap.hsd1.pa.comcast.net.:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : hsd1.pa.comcast.net.

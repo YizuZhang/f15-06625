@@ -1,0 +1,34 @@
+#+ASSIGNMENT: thiele-1
+#+POINTS: 3
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-11-18 Wed>
+
+A catalyst has been identified for the isomerization of 1-hexene to 2-hexene that has a rate constant of 0.14 1/s. If the catalyst is supported in a porous bead where the effective diffusivity of 1-hexene is 0.0062 cm^2/s, estimate the maximum size catalyst particle that has at least a 70% effectiveness factor.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.optimize import fsolve
+k = 0.14 #1/s
+D = 0.0062 # cm^2/s
+
+def fsol(R):
+    a = R/3
+    phi = (k*a**2/D)**0.5
+    eta = 1.0/phi*(1.0/np.tanh(3*phi)-1.0/(3*phi))
+    return eta-0.7
+
+ans, = fsolve(fsol,1)
+print('The maximum size of catalyst particle is {0} cm'.format(ans))
+#+END_SRC
+
+#+RESULTS:
+: The maximum size of catalyst particle is 0.583878413119 cm
+
+#+TURNED-IN: Wed Nov 18 15:19:05 2015
+
+* Grade
+#+technical: A
+#+presentation: A
+#+GRADE: 0.900
+#+GRADED-BY: Hari Thirumalai

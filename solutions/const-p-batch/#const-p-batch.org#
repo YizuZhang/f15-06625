@@ -1,0 +1,76 @@
+#+ASSIGNMENT: const-p-batch
+#+POINTS: 3
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-24 Thu>
+
+The reaction $A \rightarrow 2B$ occurs in a constant pressure batch
+reactor.  Assuming the kinetics are described by $r = k C_A^2$, $k =
+2.3$ L/mol/s, that the initial pressure is 1 atm, there are intially
+10.0 moles of A in the reactor at 298K, plot the concentration of $A$
+and the volume of the reactor as a function of time from 0 to 2000
+seconds. Finally, compute the ratio of the volume at 2000 seconds to
+the initial volume and comment on whether it makes sense.
+
+* solution
+With constant pressure, the volume of the reactor will change. We have to use the ideal gas law to determine the volume, which changes as the total number moles change. The moles are increasing, so the volume should increase. With complete conversion, we expect the volume to double.
+
+We have to use a mole balance here, and compute the concentration for the rate laws. Here is our solution.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+
+k = 2.3    # L / mol / s
+R = 0.082  # L * atm / mol / K
+T = 298    # K
+P = 1.0    # atm
+NA0 = 10.0 # initial moles of A
+
+# initial volume from ideal gas law
+V0 = NA0 * R * T / P
+
+def ode(N, t):
+    Na, Nb = N
+    NT = Na + Nb            # get total moles
+    V = NT * R * T / P      # compute the volume from ideal gas law
+
+    Ca = Na / V             # compute concentrations
+    ra = -k * Ca**2         # use stoichiometry to get rates
+    rb = -2 * ra
+
+    dNadt = ra * V          # mole balances
+    dNbdt = rb * V
+    return [dNadt, dNbdt]
+
+N0 = [NA0, 0.0]
+tspan = np.linspace(0, 2000) # in seconds
+
+sol = odeint(ode, N0, tspan)
+
+Ntotal =  np.sum(sol, axis=1)
+bV = Ntotal * R * T / P
+
+Ca = sol[:, 0] / V
+
+import matplotlib.pyplot as plt
+plt.subplot(121)
+plt.plot(tspan, Ca)
+plt.xlabel('Time (s)')
+plt.ylabel('$C_A$ mol/L')
+
+plt.subplot(122)
+plt.plot(tspan, V)
+plt.xlabel('Time (s)')
+plt.ylabel('$V$ (L)')
+plt.tight_layout()
+plt.savefig('soln.png')
+
+#$ \subsection{Volume ratio} This ratio should be nearly two at reaction completion because we double the number of moles in the reactor.
+print 'V[-1]/ V[0] = ', V[-1]/ V[0]
+#+END_SRC
+
+#+RESULTS:
+: V[-1]/ V[0] =  1.98973442186
+
+[[./soln.png]]

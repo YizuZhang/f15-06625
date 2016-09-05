@@ -1,0 +1,29 @@
+#+ASSIGNMENT: ex-mol-change
+#+POINTS: 2
+#+CATEGORY: participation
+#+RUBRIC: (("participation" . 1.0))
+#+DUEDATE: <2015-09-21 Mon>
+
+Explain what you think will happen in the following scenarios:
+
+1. In the ammonia synthesis, $\ce{N2 + 3H2 -> 2NH3}$ do you expect the volumetric flow at the exit of the reactor to be higher, lower or the same as the entrance? Briefly explain why.
+
+lower. The sum of the coefficients of products is 2, which is less than that of feed.
+
+2. In the water gas shift reaction, $\ce{CO + H2O -> CO2 + H2O}$ do you expect the volumetric flow at the exit of the reactor to be higher, lower or the same as the entrance? Briefly explain why.
+
+The same as entrance. The sum of coefficients of products 2 is the same with that of feed.
+
+3. In the gas-phase peroxide decomposition reaction, $\ce{2H2O2 -> 2H2O + O2}$ do you expect the volumetric flow at the exit of the reactor to be higher, lower or the same as the entrance? Briefly explain why.
+
+Higher, the sum of coefficients of products is 3, which bigger than that of raw, which is 2 
+
+4. Write the formula to calculate the volumetric flow as a function of inlet conditions and reactor conditions.
+
+Ft = (sum of the coefficients products- sum of the coefficients of feeds)/(sum of the coefficients of feeds)* F0* reaction extent + F0 
+#+TURNED-IN: Mon Sep 21 09:54:37 2015
+
+* Grade
+#+participation: P
+#+GRADE: 1.000
+#+GRADED-BY: Irem Sen

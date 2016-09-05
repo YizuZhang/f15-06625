@@ -1,0 +1,118 @@
+#+ASSIGNMENT: fit-1
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-23 Fri 23:59>
+
+The conversion of methyl isonitrile ($\ce{CH_{3}NC}$) to acetonitrile ($\ce{CH_{3}CN}$) is a first order reaction:
+
+$\ce{CH_{3}NC \rightarrow CH_{3}CN}$
+
+A table of data monitoring the partial pressure of $\ce{CH_{3}NC}$ as it reacts to form $\ce{CH_{3}CN}$ is given below. Using this information,
+
+1. Determine the rate constant, its 95% confidence limits and its units.
+2. Show graphically that your calculated rate constant describes the data.
+3. Demonstrate that the rate constant you calculated minimizes the error between the fit and the data.
+
+Provided data:
+#+TBLNAME: data
+| Time (min) | Pressure CH3NC (torr) |
+|------------+-----------------------|
+|          0 |                   150 |
+|         20 |                   140 |
+|         42 |                   130 |
+|         83 |                   115 |
+|        167 |                    88 |
+|        250 |                    68 |
+|        333 |                    52 |
+|        500 |                    31 |
+
+Additional information:
+T = 298 K
+R = 62.36367  L*Torr/mol/K
+
+
+#+BEGIN_SRC python :var data=data
+import numpy as np
+import matplotlib.pyplot as plt
+from pycse import regress, nlinfit
+
+# Import the data
+t = np.array(data)[:, 0]  # Time (min)
+P = np.array(data)[:, 1]  # Pressure CH3NC (Torr)
+
+R = 62.36367
+T = 298
+#+END_SRC
+
+* Solution
+Note: this was a question from exam 2 last year.
+
+We assume this is in a batch reactor. The mole balance on a constant volume batch reactor is:
+
+\frac{dCa}{dt} = k Ca
+
+with the solution:
+
+Ca / Ca0 = exp(-k t)
+
+We can take the pressure data, and convert it to concentration, and then fit it directly to the data using this model. We use nlinfit here, but you could also linearize and use regress.
+
+After we fit the data, we can calculate the summed squared error for different values of the parameter and show that the summed squared error is a minimum at the fit.
+
+#+BEGIN_SRC python :var data=data
+import numpy as np
+import matplotlib.pyplot as plt
+from pycse import regress, nlinfit
+
+# Import the data
+t = np.array(data)[:, 0]  # Time (min)
+P = np.array(data)[:, 1]  # Pressure CH3NC (Torr)
+
+R = 62.36367
+T = 298
+
+# calculate concentration
+C = P / (R * T)
+
+
+def model(t, k):
+    'C/C0 = exp(-k t)'
+    return np.exp(-k * t)
+
+# fit the data
+p, pint, se = nlinfit(model, t, C/C[0], 0.1)
+print('The rate constant is {} 1/min.\n '
+      'The confidence interval is {}.\n '.format(p, pint))
+
+plt.plot(t, C, 'bo')
+plt.plot(t, C[0] * model(t, p))
+plt.xlabel('t (min)')
+plt.ylabel('Ca (mol/L)')
+plt.savefig('soln.png')
+
+# [[./soln.png]]
+
+
+# Show this minimizes the error
+prange = np.linspace(0.001, 0.005)
+
+SSE = [np.sum((model(t, p1) - C / C[0])**2) for p1 in prange]
+plt.figure()
+plt.plot(prange, SSE)
+# plot the value we fitted, and the SSE at that point
+plt.plot([p], np.sum((model(t, p) - C/C[0])**2), 'ro')
+plt.xlabel('k')
+plt.ylabel('SSE')
+plt.savefig('soln2.png')
+#+END_SRC
+
+#+RESULTS:
+: The rate constant is [ 0.00318302] 1/min.
+:  The confidence interval is [[ 0.00314218  0.00322387]].
+:
+
+
+[[./soln2.png]]
+
+This figure shows that the summed squared error is a minimum at the value we found by fitting.

@@ -1,0 +1,43 @@
+#+ASSIGNMENT: equil-1
+#+POINTS: 3
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-21 Wed 23:59>
+
+For the reaction $\ce{N_2O_4} (g) \leftrightharpoons 2 \ce{NO_2}$ estimate the
+equilibrium composition at 25 $^\circ$C and 1 bar if you start with pure
+\ce{N_2O_4} and $\Delta G = 4.73$ kJ/mol for these conditions. Demonstrate that
+your solution is consistent with the given information.
+#+BEGIN_SRC python
+from scipy.optimize import fsolve
+import numpy as np
+
+deltaG = 4730 # J/mol
+R = 8.314 # J/K/mol
+T = 298.15 # K
+P = 10**5 #Pa
+Pstd = 10**5 #Pa Standard State
+k = np.exp(-deltaG/R/T)
+# Assume this constant define by pressure.
+def equ(Pa):
+    #x = P - Pa
+    Pb = P - Pa
+    e = (Pb/Pstd)**2/(Pa/Pstd)
+    return e-k
+guess = 5000
+ans, = fsolve(equ,guess)
+print ('Equilibrium constant is {0:.4f}'.format(k))
+print ('N2O4 pressure is {0:.2f} Pa, NO2 pressure is {1:.2f} Pa'.format((ans),(P-ans)))
+#+END_SRC
+
+#+RESULTS:
+: Equilibrium constant is 0.1484
+: N2O4 pressure is 68193.35 Pa, NO2 pressure is 31806.65 Pa
+
+#+TURNED-IN: Wed Oct 21 20:46:53 2015
+
+* Grade
+#+technical: A/B
+#+presentation: A/B
+#+GRADE: 0.800
+#+GRADED-BY: Hari Thirumalai

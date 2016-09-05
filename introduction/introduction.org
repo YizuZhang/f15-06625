@@ -1,0 +1,74 @@
+#+ASSIGNMENT: introduction
+#+POINTS: 2
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-02 Wed>
+
+Practice using org-mode.
+1. Press Shift-Tab a few times. You should see the headlines expand and contract.
+
+2. Put your cursor on a headline. Press Tab a few times. You should see just that headline expand and contract.
+
+* Tell me about yourself
+** What name do you like to be called?
+Gao
+** Where are you from?
+Hefei, Anhui Province, China
+** Put a picture of yourself
+Put a picture of yourself in c:/Users/<userid>/AppData/Roaming/techela/f14-06625/introduction
+
+Put your cursor in the next block and type: C-c C-c to run it. This will show you what directory to put your picture in.
+#+BEGIN_SRC sh
+pwd
+#+END_SRC
+
+#+RESULTS:
+: /c/Users/Gao/AppData/Roaming/techela/f15-06625/introduction
+
+
+Put the filename of the picture file here: file:Gao.jpg
+
+#+attr_org: :width 300
+q[[./Gao.jpg]]
+
+
+** Tell me some interesting things about yourself (hobbies, school activities, etc...)
+I hope to be a little bit fatter and stronger but I am still so thin no matter how much I eat.
+I like sports and I am good at badminton.
+I really enjoy reading textbooks when I study, but now I will try my best to study from computer.
+* Educational background
+** What is your undergraduate degree in, and where did you do it?
+
+Chemical Engineering, I got it from Dalian University of Technology.
+** Have you taken a chemical reaction engineering course before, and if so, what book did you use? Did you use any software?
+Yes, I've already taken course "Chemical Reaction Engineering". The textbook I used is written by professors from my university.
+But unfortunately, I did not use any software.
+** What is your programming background?
+
+I took a course of Programming in C language, besides, I taught myself Matlab, but not much.
+* Turning in the assignment
+Click this link to turn in this assignment: elisp:tq-turn-it-in.
+
+Or type M-x tq-turn-it-in
+
+Or, with this file open, turn it in from the menu:
+techela -> Turn Assignment in
+
+If everything went well you should see something like:
+
+Woohoo! You turned it in!
+
+at the bottom of your screen. You can turn an assignment in as many times as you want before the deadline (or before the assignment is collected).
+#+TURNED-IN: Wed Sep  2 11:05:08 2015
+
+* feedback
+[[elisp:(goto-char 1114)][(jkitchin) line 36:]] one day you may appreciate this more!
+
+[[elisp:(goto-char 1349)][(jkitchin) line 41:]] I have visited Dalian once. It is a beautiful city!
+
+
+* Grade
+#+technical: A
+#+presentation: A
+#+GRADE: 0.900
+#+GRADED-BY: John Kitchin

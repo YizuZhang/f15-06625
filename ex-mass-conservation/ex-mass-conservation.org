@@ -1,0 +1,49 @@
+#+ASSIGNMENT: ex-mass-conservation
+#+POINTS: 1
+#+CATEGORY: participation
+#+RUBRIC: (("participation" . 1.0))
+#+DUEDATE: <2015-09-09 Wed>
+
+Show that mass is conserved for the Water-splitting reaction:
+H2O -> H2 + 1/2 O2 using the reaction stoichiometric vector and molecular weight vector.
+
+#+BEGIN_SRC python
+import numpy as np
+
+alpha = np.array([-1, 1, 0.5])
+
+MW = np.array([18, 2, 32])
+print(np.dot(alpha, MW))
+#+END_SRC
+
+#+RESULTS:
+: 0.0
+
+
+Repeat the analysis for the ammonia synthesis reaction: N2 + 3H2 -> 2NH3. Put your cursor after the p below, and press tab to create the source block.
+
+#+BEGIN_SRC python
+import numpy as np
+
+alpha =np. array([-1, -3, 2])
+
+MW = np.array([28,2,17])
+
+print(np.dot(alpha, MW))
+
+#+END_SRC
+
+#+RESULTS:
+: 0
+
+
+
+
+This will not be visible until I release the solution.
+solution:ex-mass-conservation
+#+TURNED-IN: Wed Sep  9 09:43:47 2015
+
+* Grade
+#+participation: P
+#+GRADE: 1.000
+#+GRADED-BY: John Kitchin

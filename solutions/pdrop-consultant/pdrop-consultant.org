@@ -1,0 +1,128 @@
+#+ASSIGNMENT: pdrop-consultant
+#+POINTS: 2
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-25 Fri>
+
+A company running the reaction A→B in a packed bed reactor is experiencing low conversions due to a large pressure drop across the packed bed. A consultant advised them to dilute the feed stream with an inert gas to increase conversion. The company wants a second opinion. Provide a critical assessment of the consultant’s advice and provide your own advice on how to increase the conversion in the reactor. Be specific and quantitative where you can be, and provide an example calculation that shows the improved conversion.
+
+* solution
+This is probably bad advice.  The reaction has no change in the total number of moles, so it is not likely the reaction itself plays a role in the pressure drop. Adding an inert to the feed will further increase the volumetric flow and dilute the feed, both of which are likely to further decrease conversion by reducing the residence time and reaction rates. Some ways you could improve conversion is by reducing the volumetric flow rate, or better, reduce the pressure drop by a redesign of the packed bed.  This could be achieved by using larger diameter particles, or more porous particles. You could also increase the inlet pressure, which would increase the concentration of species and the reaction rates.
+
+We adapt the example from the notes here for A \rightarrow B. We will assume the rate law is -rA = k*Pa. You can assume many other things too. First we compute a base scenario. The key here is the conversion with the pressure drop should be "low". In this case, we get about 35% conversion.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+
+Fa0 = 1.0 # lbmol / h
+Fb0 = 0.0
+Ft0 = Fa0 + Fb0
+
+P0 = 10 # atm
+
+alpha = 0.01 # 1 / lb_m cat
+k = 0.001 # lb-mol / (atm * h)
+
+def ode(F, W):
+    Fa, Fb, y = F  # unpack the variables
+    P = y * P0
+
+    Ft = Fa + Fb
+
+    Pa = Fa / Ft * P
+
+    ra = -k * Pa
+    rb = -ra
+
+    # define the 3 coupled ODES
+    dFadW = ra
+    dFbdW = rb
+    dydW = -alpha /(2 * y) * Ft / Ft0
+
+    return [dFadW, dFbdW, dydW]
+
+y0 = 1.0 # P0/P0
+F0 = [Fa0, Fb0, y0]
+
+Wspan = np.linspace(0, 50) # lb_m cat
+
+sol = odeint(ode, F0, Wspan)
+
+import matplotlib.pyplot as plt
+
+plt.subplot(1, 2, 1) # subplot with two columns in one row
+plt.plot(Wspan, sol[:, 0:2]) # plot columns 0, 1
+plt.legend(['A', 'B', 'C'],loc='lower center')
+plt.xlabel('Catalyst weight ($lb_m$)')
+plt.ylabel('Molar flow (mol/min)')
+
+plt.subplot(1, 2, 2)
+plt.plot(Wspan, sol[:,2], 'k--') # plot column 3
+plt.xlabel('Catalyst weight ($lb_m$)')
+plt.ylabel('$P/P_0$')
+plt.legend(['$P/P_0$'],loc='upper right')
+
+plt.tight_layout()
+plt.savefig('pressure-drop-pfr.png')
+
+Fa = sol[:, 0]
+Fa_exit = Fa[-1]
+print('The exit conversion is {}'.format((Fa_exit - Fa0) / (-Fa0)))
+#+END_SRC
+
+#+RESULTS:
+: The exit conversion is 0.350117927949
+
+[[./pressure-drop-pfr.png]]
+
+In the next step, we need to show that a change would improve the conversion. We first tried reducing the pressure drop, but even a factor of 10 has a small effect, so we also increase the pressure. This leads to a doubling of the conversion.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+
+Fa0 = 1.0 # lbmol / h
+Fb0 = 0.0
+Ft0 = Fa0 + Fb0
+
+P0 = 20 # atm
+
+alpha = 0.001 # 1 / lb_m cat
+k = 0.001 # lb-mol / (atm * h)
+
+def ode(F, W):
+    Fa, Fb, y = F  # unpack the variables
+    P = y * P0
+
+    Ft = Fa + Fb
+
+    Pa = Fa / Ft * P
+
+    ra = -k * Pa
+    rb = -ra
+
+    # define the 3 coupled ODES
+    dFadW = ra
+    dFbdW = rb
+    dydW = -alpha /(2 * y) * Ft / Ft0
+
+    return [dFadW, dFbdW, dydW]
+
+y0 = 1.0 # P0/P0
+F0 = [Fa0, Fb0, y0]
+
+Wspan = np.linspace(0, 50) # lb_m cat
+
+sol = odeint(ode, F0, Wspan)
+
+
+Fa = sol[:, 0]
+Fa_exit = Fa[-1]
+print('The exit conversion is {}'.format((Fa_exit - Fa0) / (-Fa0)))
+#+END_SRC
+
+#+RESULTS:
+: The exit conversion is 0.627453644127
+
+As one can see, this increases the conversion significantly.

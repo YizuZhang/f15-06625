@@ -1,0 +1,85 @@
+#+ASSIGNMENT: cstr-mult-reactions
+#+POINTS: 3
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-21 Wed 23:59>
+
+The reactions
+
+\begin{align}
+A + B \rightarrow C \\
+A + C \rightarrow D
+\end{align}
+
+take place in a CSTR. It is known that $r_1 = 14.19 C_A C_B$
+kmol/m$^3$/ksec and $r_2=2.31 C_A C_C$ kmol/m$^3$/ksec. A is fed at 40
+kmol/ksec and B is fed at 20 kmol/ksec at an overall volumetric flow
+of 5 m$^3$/ksec. Show graphically if there is an optimal volume that
+maximizes the exit concentration of C. Explain your answer.
+
+* Solution
+The key to this solution is solving the the CSTR mole balance for many volumes over a range that shows if there is a maximum. We expect there to be a maximum because C is essentially in a series reaction where it is produced in reaction 1 and consumed in reaction 2. So there should be some optimal volume that maximizes the concentration.
+
+We use a parameterized objective function to solve this problem, and loop through volumes to get a solution for each volume. Since we have a fixed volumetric flow, we actually decide to define a range of space times, and compute the volume for each time.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.optimize import fsolve
+
+k1 = 14.19
+k2 = 2.31
+
+Fa0 = 40.0
+Fb0 = 20.0
+Fc0 = 0.0
+
+v0 = 5.0
+
+def cstr(F, V):
+    Fa, Fb, Fc = F
+
+    Ca = Fa / v0
+    Cb = Fb / v0
+    Cc = Fc / v0
+
+    r1 = k1 * Ca * Cb
+    r2 = k2 * Ca * Cc
+
+    ra = -r1 - r2
+    rb = -r1
+    rc = +r1 - r2
+
+    z1 = Fa0 - Fa + ra * V
+    z2 = Fb0 - Fb + rb * V
+    z3 = Fc0 - Fc + rc * V
+    return [z1, z2, z3]
+
+
+tauspan = np.linspace(0.001, 1, 100)
+Vspan = v0 * tauspan  # tau = V / v0
+
+FA, FB, FC = np.empty(Vspan.shape), np.empty(Vspan.shape), np.empty(Vspan.shape)
+F0 = [2.0, 2.0, 15.0] # initial guesses
+for i, V in enumerate(Vspan):
+    Fa, Fb, Fc = fsolve(cstr, F0, args=(V,))
+    FA[i] = Fa
+    FB[i] = Fb
+    FC[i] = Fc
+    F0 = [Fa, Fb, Fc] # save solution as initial guess for next iteration
+
+Cc = FC/v0
+imax = np.argmax(Cc)
+print 'Max Cc = {0:1.3f} kmol/m^3 at V = {1:1.2f} m^3'.format(Cc[imax], Vspan[imax])
+
+import matplotlib.pyplot as plt
+plt.plot(Vspan, FA/v0, Vspan, FB/v0, Vspan, FC/v0)
+plt.legend(['A','B','C'])
+plt.xlabel('Reactor volume (m$^3$)')
+plt.ylabel('C_j (kmol/m$^3$)')
+plt.savefig('soln-1.png')
+#+END_SRC
+
+#+RESULTS:
+: Max Cc = 2.031 kmol/m^3 at V = 0.21 m^3
+
+[[./soln-1.png]]

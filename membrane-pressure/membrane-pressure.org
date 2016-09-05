@@ -1,0 +1,116 @@
+#+ASSIGNMENT: membrane-pressure
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-01 Thu 23:59>
+
+The gas-phase reaction $A \rightarrow 2B + C$ occurs in a packed bed reactor. There is a
+pressure drop that is characterized by $\alpha$ = 0.008 / kg cat.
+Assume the kinetics are described by $r = k P_A$, with
+$k = 0.02$ mol/atm/kg$_{cat}$/h, $A$ is fed at 1 mol/hr, at a feed pressure of 5 atm. The reactor is at 500K.
+
+1. Determine the exit concentration of A and B for a catalyst weight of 50 kg for a regular packed bed reactor.
+
+2. Suppose a membrane reactor that is selective to permeation of C can be filled with the same catalyst is available. The membrane is characterized by a $R_C = -k_c C_C$ with $k_c = 0.5$ L/kg/hr.  Calculate the exit concentrations of A and B for a catalyst weight of 50kg for the same feed conditions.  Compare your results to the packed bed reactor. Explain qualitatively why are these results different, and which reactor is better.
+
+Problem a:
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+alpha = 0.008 # 1/kg_cat
+k = 0.02 # mol/atm/kg_cat/h
+R = 0.082 # atm*L/k/mol
+T = 500 # k
+Fa0 = 1 # mol/hr
+P0 = 5 # atm
+
+def func(F,W):
+    Fa,Fb,Fc,y = F
+    Ft = Fa + Fb + Fc
+    P = y * P0
+    
+    Pa = Fa/Ft * P
+    
+    r = k*Pa
+    ra = -r
+    rb = 2*r
+    rc = r
+    
+    dFadW = ra
+    dFbdW = rb
+    dFcdW = rc
+    dydW = alpha/-(2*y)*Ft/Fa0 
+    return [dFadW, dFbdW, dFcdW, dydW]
+F0 = [Fa0,0,0,1]
+Wspan = np.linspace(0,50)
+sol = odeint(func,F0,Wspan)
+Ft = sum(sol[-1,0:3]) # not included last one
+print ('Flowrat of A and total Flowrate is {0:1.4f} mol/hr, {1:1.4f} mol/hr'.format( sol[-1][0],Ft))
+Pexit = P0 * sol[-1][3]
+Pa = sol[-1][0]/Ft * Pexit
+Pb = sol[-1][1]/Ft * Pexit
+print ('The exit concentration of A,B is {0:1.4f} mol/L and {1:1.4f} mol/L'.format(Pa/R/T,Pb/R/T))
+
+#+END_SRC
+
+#+RESULTS:
+: Flowrat of A and total Flowrate is 0.1661 mol/hr, 2.6677 mol/hr
+: The exit concentration of A,B is 0.0023 mol/L and 0.0234 mol/L
+
+Problem b:
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+alpha = 0.008 # 1/kg_cat
+k = 0.02 # mol/atm/kg_cat/h
+kc = 0.5 #L/kg/hr
+R = 0.082 # atm*L/k/mol
+T = 500 # k
+Fa0 = 1 # mol/hr
+P0 = 5 # atm
+
+def func(F,v):
+    Fa, Fb, Fc, y = F
+    Ft = Fa + Fb + Fc
+    P = y * P0
+    
+    Pa = Fa/Ft * P
+    Pc = Fc/Ft * P
+    
+    r = k*Pa
+    ra = -r
+    rb = 2*r
+    rc = r
+    Cc = Pc/R/T
+    
+    
+    Rb = -kc*Cc
+    
+    dFadW = ra
+    dFbdW = rb
+    dFcdW = rc + Rb 
+    dydW = alpha/-(2*y)*Ft/Fa0 
+    return [dFadW, dFbdW, dFcdW, dydW]
+F0 = [Fa0,0,0,1]
+Wspan = np.linspace(0,50)
+sol = odeint(func,F0,Wspan)
+Ft = sum(sol[-1,0:3])
+print ('Flowrat of A and total Flowrate is {0:1.4f} mol/hr, {1:1.4f} mol/hr'.format( sol[-1][0],Ft))
+Pexit = P0 * sol[-1][3]
+Pa = sol[-1][0]/Ft * Pexit
+Pb = sol[-1][1]/Ft * Pexit
+print ('The exit concentration of A,B is {0:1.4f} mol/L and {1:1.4f} mol/L'.format(Pa/R/T,Pb/R/T))
+#+END_SRC
+
+#+RESULTS:
+: Flowrat of A and total Flowrate is 0.1375 mol/hr, 2.2744 mol/hr
+: The exit concentration of A,B is 0.0031 mol/L and 0.0392 mol/L
+
+From the result we can see the exit flowrate of A from membrane reactor is less than that from regular reactor, which means that the efficiency of the membrane reactor is higher the regular one. This is because that when C permeating out of the reaction, the total flowrate becomes smaller,( also calculated and shown from the results), the residence time of the flow becomes larger, hence the conversion is higher.
+#+TURNED-IN: Wed Sep 30 13:45:20 2015
+
+* Grade
+#+technical: A+
+#+presentation: A
+#+GRADE: 0.935
+#+GRADED-BY: Irem Sen

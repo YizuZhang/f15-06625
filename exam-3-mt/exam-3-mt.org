@@ -1,0 +1,100 @@
+#+ASSIGNMENT: exam-3-mt
+#+POINTS: 5
+#+CATEGORY: exam3
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-12-09 Wed 10:20>
+
+NO is produced in an industrial process. It is against the law to emit NO into the atmosphere, so your company uses a packed bed of porous carbon beads to reduce the NO to 1/2 N2 and CO. The reaction is first order in NO: -r_{NO} = k1 C_{NO} and it primarily occurs in the pores of the carbon pellets.
+
+The feed gas is 2% NO, 98% air flowing at 1e-6 m^3/s through a 2 inch tube at 1173K and 101.3 kPa.
+
+The reaction occurs at a rate of
+k1 = 0.22 1 / s and is first order in NO.
+
+The effective diffusivity of gas in the carbon pellets is 1.82e-8 m^2/s
+
+The carbon pellets are 3e-3 m in radius. The catalyst density is 2.8e6 g/m^3
+
+There is no pressure drop, and the carbon pellets do not change size significantly.
+
+Calculate the weight of porous carbon required to reduce the concentration of NO from 2mol% in air to 0.004mol%, which is the legal limit.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+P = 101.3  # kPa
+T = 1173
+R = 8.314e-3  # m^3 kPa / (K mol)
+v0 = 1e-6     # m^3/s
+k1 = 0.22      # m^3 / g / s
+De = 1.82e-8  # m^2 / s
+Rd = 3e-3      # m
+Pa0 = P*0.02
+Pi0 = 0*0.98
+
+Pexit = P*0.00004
+
+Fa0 = Pa0*v0/R/T
+Fi0 = Pi0*v0/R/T
+Ft0 = P*v0/R/T
+
+rhoc = 2.8e6  # Catalyst density g / m^3
+M = 12.0/1000 #g/kmol
+
+
+a = Rd/3
+phi = (k1*a**2/De)**0.5
+eta = 1.0/phi*(1/np.tanh(3*phi)-1.0/(3*phi))
+
+def dFdW(F,W):
+    Fa,Fb,Fc = F
+    Ft = Fa+Fb+Fc+Fi0
+
+    v =v0*Ft/Ft0
+
+    Ca = Fa/v
+
+    rideal = k1*Ca
+    r = rideal*eta
+
+    dFadW = -r
+    dFbdW = 0.5*r
+    dFcdW = r
+
+    return [dFadW,dFbdW,dFcdW]
+
+def event(F,W):
+    Fa,Fb,Fc = F
+    Ft = Fa+Fb+Fc+Fa
+    value = Fa- 0.00004*Ft
+    isterminal = True
+    direction = 0
+    return [value,isterminal,direction]
+
+from pycse import odelay
+F0 = [Fa0,0,0]
+Wspan = np.linspace(0,100)
+W,sol ,We,Fe,Ie =odelay(dFdW,F0,Wspan,[event])
+
+Weight, = We*rhoc*M
+print ('Weight of Carbon catalyst is {0}g.'.format(Weight))
+print We
+#+END_SRC
+
+#+RESULTS:
+: Weight of Carbon catalyst is 68571.4285714g.
+: [ 2.04081633]
+
+#+TURNED-IN: Wed Dec  9 10:14:36 2015
+
+* feedback
+[[elisp:(goto-char 2031)][(jkitchin) line 81:]] your units don't make sense here. g * g / m^3 * g / kmol.
+
+
+* Grade
+#+technical: A/B
+#+presentation: C
+#+GRADE: 0.710
+#+GRADED-BY: John Kitchin

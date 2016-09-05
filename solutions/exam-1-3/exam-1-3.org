@@ -1,0 +1,76 @@
+#+ASSIGNMENT: exam-1-3
+#+POINTS: 4
+#+CATEGORY: exam1
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-07 Wed 10:20>
+
+The gas-phase decomposition reaction \ce{A \rightarrow 3B} occurs in a packed bed reactor. Assume the reaction is a first order reaction, $r_A = k C_A$  with a rate constant of 0.02 1/min. If the volumetric flowrate into the reactor is 50 mL/min, the inlet pressure is 5 atm of pure A at 500K, and the packed bed is known to have a pressure drop parameter of 0.003 atm/kg of packing,
+
+1. Estimate the mass of packing required to achieve 98% conversion of A.
+
+2. Calculate the volumetric flow at the exit of the reactor. comment on whether your answer makes sense.
+
+* Solution
+We have a packed bed reactor with a gas-phase reaction that changes the molar flow rates. We need to account for the changing volumetric flow rate, and a pressure drop in the reactor.
+
+#+BEGIN_SRC python
+from scipy.integrate import odeint
+import numpy as np
+
+v0 = 50 / 1000.0 # L / min
+PA0 = 5  # atm
+k = 0.02  # 1 / min
+R = 0.0821  # L * atm / mol / K
+T = 500
+
+Ca0 = PA0 / R / T
+Fa0 = Ft0 = Ca0 * v0
+
+alpha = 0.003  # atm / kg
+
+def dFdW(F, W):
+    Fa, Fb, y = F
+    Ft = Fa + Fb
+    v = v0 * Ft / Ft0
+
+    Ca = Fa / v
+    r = k * Ca
+    ra = -r
+    rb = 3 * r
+    dFadW = ra
+    dFbdW = rb
+    dydW = -alpha /(2 * y) * Ft / Ft0
+    return [dFadW, dFbdW, dydW]
+
+# initial conditions
+F0 = [Fa0, 0.0, 1.0]
+Wspan = [0, 24]
+
+sol = odeint(dFdW, F0, Wspan)
+
+Fa_exit = sol[-1][0]
+Fb_exit = sol[-1][1]
+y_exit = sol[-1][2]
+
+print sol
+print (Fa0 - Fa_exit) / Fa0
+
+print Ft0
+print v0
+print v0 * (Fa_exit + Fb_exit) / Ft0 / y_exit
+
+# expectation from stoichiometry
+X = 0.98
+print v0 * (1 - X + 3*X)
+#+END_SRC
+
+#+RESULTS:
+: [[  6.09013398e-03   0.00000000e+00   1.00000000e+00]
+:  [  1.29273807e-04   1.78825805e-02   9.01693774e-01]]
+: 0.978773240931
+: 0.00609013398295
+: 0.05
+: 0.163999495633
+: 0.148
+
+Based on the manual iteration, you need about 24 kg of catalyst to obtain the conversion. At the exit, the volumetric flowrate is about  0.15 L / min, which is close to three times the inlet volumetric flow. We expect approximately that because of the stoichiometry. It is actually higher than the stoichiometric expectation because of the pressure drop.

@@ -1,0 +1,162 @@
+#+ASSIGNMENT: exam-1-2
+#+POINTS: 6
+#+CATEGORY: exam1
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-07 Wed 10:20>
+
+A gas-phase reaction 2A \rightarrow B occurs in a plug flow reactor with a volume of 20L, an inlet molar flow of 0.25 mol/min, and an inlet concentration of 0.5 mol/L. A conversion of 80% is achieved.
+
+Estimate the conversion that could be achieved in a 200 L CSTR with the same conditions as the PFR. Make any assumptions necessary, and make sure you explain what they are.
+
+* Solution
+We need to derive a value of the rate constant from the first part, and use it for the second part. We have to assume a rate law to do that. The stoichiometry suggests a second order rate law: \(-rA = k C_A^2\).
+
+\( \frac{dFa}{dV} = - k (F_A / \nu)^2 \)
+
+We know the inlet molar flow and the conversion, so we can actually set up a simple equation to calculate k.
+
+\(k = -\nu^2 / V * \int_{Fa0}^{Fa_{exit}} 1 / Fa^2 dFa\)
+
+#+BEGIN_SRC python
+from scipy.integrate import quad
+
+V = 20.0    # L
+Fa0 = 0.25  # mol / min
+Ca0 = 0.5   # mol / L
+
+v0 = Fa0 / Ca0
+
+Faexit = (1 - 0.8) * Fa0
+
+def integrand(Fa):
+    return 1.0 / Fa**2
+
+integral, error = quad(integrand, Fa0, Faexit)
+k = -v0**2 / V * integral
+
+print k
+#+END_SRC
+
+#+RESULTS:
+: 0.2
+
+So, we have k = 0.2 L / mol / min.
+
+Now we just need to solve the CSTR mole balance for Ca:
+
+\(0 = Fa0 - v0 * Ca - k * Ca**2 * V\)
+
+#+BEGIN_SRC python
+from scipy.optimize import fsolve
+
+Fa0 = 0.25  # mol / min
+Ca0 = 0.5   # mol / L
+
+v0 = Fa0 / Ca0
+
+V = 20
+k = 0.2
+
+def objective(Ca):
+    return Fa0 - Ca * v0 - k * Ca**2 * V
+
+ans, = fsolve(objective, 0.5)
+
+X = (Ca0 - ans) / Ca0
+
+print('Conversion = {}'.format(X))
+#+END_SRC
+
+#+RESULTS:
+: Conversion = 0.609611796798
+
+* Solution 2
+You may have noticed that there is a change in moles, and for a gas phase reactor, this will change the volumetric flow rate. This make the problem considerably more difficult to solve.
+
+Now we need to setup an ODE for the mole balance:
+
+\(\frac{dFa}{dV} = rA\)
+
+and
+
+\(\frac{dFb}{dV} = rB\)
+
+and account for the changing flow rate with $v = v0 * Ft / Ft0$
+
+#+BEGIN_SRC python
+V = 20.0    # L
+Ft0 = Fa0 = 0.25  # mol / min
+Ca0 = 0.5   # mol / L
+
+v0 = Fa0 / Ca0
+
+def dFdV(F, V, k):
+    Fa, Fb = F
+    Ft = F.sum()
+    v = v0 * Ft / Ft0
+    Ca = Fa / v
+    ra = - k * Ca**2
+    dFadV = ra
+    dFbdV = ra / -2.0
+    return [dFadV, dFbdV]
+
+import numpy as np
+from scipy.integrate import odeint
+from scipy.optimize import fsolve
+
+Vspan = np.linspace(0, 20)
+F0 = [Fa0, 0.0]
+
+@np.vectorize
+def objective(k):
+    sol = odeint(dFdV, F0, Vspan, args=(k,))
+    Fa_exit = sol[-1][0]
+    return Fa_exit - (1 - 0.8) * Fa0
+
+k, = fsolve(objective, 0.2)
+print k
+#+END_SRC
+
+#+RESULTS:
+: 0.100235963979
+
+Now, we have an estimate for k, we apply it to the CSTR. WE also have a mole change here, so the exit volumetric flow is not the same as the entrance volumetric flow.
+
+We still have:
+
+0 = Fa0 - Fa + ra*V
+  = Fa0 - Fa - k * (Fa / v)**2 * V
+
+0 = -Fb + 0.5 * k * (Fa / v)**2 * V
+
+with v = v0 * (Fa + Fb) / Ft0
+#+BEGIN_SRC python
+from scipy.optimize import fsolve
+V = 20.0    # L
+Ft0 = Fa0 = 0.25  # mol / min
+Ca0 = 0.5   # mol / L
+
+v0 = Fa0 / Ca0
+
+k = 0.100235963979
+
+def objective(F):
+    Fa, Fb = F
+    Ft = F.sum()
+    v = v0 * Ft / Ft0
+    Ca = Fa / v
+    ra = -k * Ca**2
+    z1 = Fa0 - Fa + ra * V
+    z2 = 0.0 - Fb + ra / (-2) * V
+    return [z1, z2]
+
+Fa_exit, Fb_exit = fsolve(objective, [0.1, 0.05])
+
+exit_conversion = (Fa0 - Fa_exit) / Fa0
+print exit_conversion
+#+END_SRC
+
+#+RESULTS:
+: 0.616394454991
+
+You can see in this case, there is not much difference in the exit conversion. How can that be? The rate constant is cut in half! The reason is subtle, the flow rate is also reduced by /approximately/ one half, and so the increased residence time largely compensates for the change in rate constant. That is coincidental in this case.

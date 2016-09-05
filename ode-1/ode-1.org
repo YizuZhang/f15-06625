@@ -1,0 +1,97 @@
+#+ASSIGNMENT: ode-1
+#+POINTS: 2
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-17 Thu>
+
+Consider this differential equation.
+
+\(F_{A0} \frac{dX}{dV} = k (C_{A0} (1 - X))^2\)
+
+It is given that k = 0.05, C_{A0} = 2.5, and F_{A0} = 5, and V stands for volume, and it is the independent variable. It is also given that X(V=0) = 0.
+
+1. Use Python to integrate the differential equation and plot the solution. Include the figure in this homework.
+
+2. Determine the volume required to reach a value of X of 0.9.
+
+elisp:org-toggle-pretty-entities
+#+BEGIN_SRC python
+# To solve the differential equation we can first plot the equation.
+
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+FA0 = 5
+k = 0.05
+CA0 = 2.5
+X0 = 0
+def ode(X, V):  #Define a function ode, then use the 'odeint' to solve it.
+    CA = CA0 * (1-X)
+    dXdV = k * CA**2 /FA0
+    return dXdV
+Vspan = np.linspace(0, 180)
+sol = odeint(ode, X0, Vspan)  #function: ode, inital condtion X0,
+plt.plot(Vspan, sol)
+plt.xlabel('V')
+plt.ylabel('X')
+plt.savefig('homework1.png')
+plt.show()
+#+END_SRC
+
+#+RESULTS:
+
+#+BEGIN_SRC sh
+pwd #To include the plot in the homework
+#+END_SRC
+#+RESULTS:
+
+=/c/Users/Gao/AppData/Roaming/techela/f15-06625/ode-1
+==/c/Users/Gao/AppData/Roaming/techela/f15-06625/ode-1
+file:homework1.png
+[[./homework1.png]]
+[[.\homework1.png]]
+#+BEGIN_SRC python
+#To get the exact answer for this question. We can use quad to integrate the differential equations and then use fsolve to solve it.
+
+
+from scipy.integrate import quad
+from scipy.optimize import fsolve
+import numpy as np
+
+FA0 = 5
+k = 0.05
+CA0 = 2.5
+X0 = 0
+X = 0.9 
+
+#from \(F_{A0} \frac{dX}{dV} = k (C_{A0} (1 - X))^2\)
+
+#we can transform dX and dV to different side and then integrate them
+#
+def integrand1(X):   
+    return 1.0/(1-X)**2
+
+def integrand2(V):
+    return k * CA0**2 / FA0
+#To find V, we define a function equals integrand1- integrand2, use fsolve.
+def func(V):
+    I1, e1 = quad(integrand1, X0, X)
+    I2, e2 = quad(integrand2, 0, V)
+    return I1- I2
+
+guess = 120  #guess from the figure.
+sol = fsolve(func, guess)
+print ('When Volume = {0:1.2f}, X reaches 0.9 '. format(float(sol)))
+#+END_SRC
+
+#+RESULTS:
+: When Volume = 144.00, X reaches 0.9 
+
+#+TURNED-IN: Thu Sep 17 17:47:09 2015
+
+* Grade
+#+technical: A
+#+presentation: A
+#+GRADE: 0.900
+#+GRADED-BY: Hari Thirumalai

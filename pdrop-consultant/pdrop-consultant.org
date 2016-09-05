@@ -1,0 +1,92 @@
+#+ASSIGNMENT: pdrop-consultant
+#+POINTS: 2
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-25 Fri>
+
+A company running the reaction A→B in a packed bed reactor is experiencing low conversions due to a large pressure drop across the packed bed. A consultant advised them to dilute the feed stream with an inert gas to increase conversion. The company wants a second opinion. Provide a critical assessment of the consultant’s advice and provide your own advice on how to increase the conversion in the reactor. Be specific and quantitative where you can be, and provide an example calculation that shows the improved conversion.
+
+
+The consultant's advice won't be effective if the initial pressure keep the unchanged. The coefficients of reactants equals to that of  products.
+Assumption:
+Fa0 = 2 #lbmol/h
+Fb0 = 0
+Ft0 = Fa0
+P0 = 10 #atm
+alpha = 0.02 # 1/lb_m cat
+k = 0.1 # lb-mol/(atm * lb_m cat * h)
+r = k Pa
+I will calculate reaction conversion without inert gas and with Fi0 = 2 lbmol/h.
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+Fa0 = 2 #lbmol/h
+Fb0 = 0
+Fi0 = 0 # lbmol/h
+Ft0 = Fa0+ Fi0
+P0 = 10
+alpha = 0.02 # 1/lb_m cat
+k = 0.1 # lb-mol/(atm * lb_m cat * h)
+
+def ode (F,W):
+    Fa, Fb, y = F   #unpack Fa,Fb y
+    P = y * P0
+    Ft = Fa + Fb + Fi0 # total flowrate
+    Pa = Fa / Ft * P
+    Pb = Fb / Ft * P
+
+    ra = - k * Pa
+    rb = -ra
+
+    dFadW = ra
+    dFbdW = rb
+    dydW = -alpha /(2*y)*Ft/Ft0
+    return [dFadW,dFbdW,dydW]
+
+y0 = 1
+F0 = [Fa0, Fb0, y0]
+Wspan = np.linspace(0,5)
+sol = odeint(ode, F0 ,Wspan)
+plt.subplot(1, 2, 1) # subplot with two columns in one row
+plt.plot(Wspan, sol[:, 0:2]) # plot columns 0, 1,
+plt.legend(['A', 'B'],loc='lower center')
+plt.title('Without Inert Gas')
+plt.xlabel('Catalyst weight ($lb_m$)')
+plt.ylabel('Molar flow (mol/min)')
+print ('With {0:1.2f}lbm catalyst ,the conversion of A without inert gas is {1:0.2f}'.format((Wspan[-1]),(Fa0-sol[-1][0])/Fa0))
+print ('With {0:1.2f}lbm catalyst ,the conversion of A without inert gas is {1:0.2f}'.format((Wspan[25]),(Fa0-sol[25][0])/Fa0))
+
+#Inert gas was introduced
+Fi0 = 2 # lbmol/h
+P0 = 10  # initial pressure keep unchanged.
+sol = odeint(ode, F0 ,Wspan)
+print ('With {0:1.2f} lbm catalyst, the conversion of A without inert gas is {1:0.2f}'.format((Wspan[-1]),(Fa0-sol[-1][0])/Fa0))
+F0 = [Fa0, Fb0, y0]
+plt.subplot(1, 2, 2)
+plt.plot(Wspan, sol[:, 0:2])
+plt.legend(['A', 'B'],loc='lower center')
+plt.xlabel('Catalyst weight ($lb_m$)')
+plt.ylabel('Molar flow (mol/min)')
+plt.title('With Inert Gas')
+plt.tight_layout()
+plt.savefig('figure 1.png')
+#+END_SRC
+#[[file:figure 1.png]]
+#+RESULTS:
+: With 5.00lbm catalyst ,the conversion of A without inert gas is 0.91
+: With 2.55lbm catalyst ,the conversion of A without inert gas is 0.72
+: With 5.00 lbm catalyst, the conversion of A without inert gas is 0.69
+
+From the result we can see that this method cannot improve conversion, actually when inert gas is introduced, the conversion will become smaller.
+This result is based on the assumption that the initial pressure stay unchanged, if this pressure will change in according to the inlet gas flowrate. (For example P0 becomes 20 atm when inert gas introduced) The conversion will stay unchanged.
+
+So I suggest that add more catalysts. From the result when can see it is an effective way to improve the conversion of A.
+#+TURNED-IN: Fri Sep 25 20:45:45 2015
+
+* Grade
+#+technical: A
+#+presentation: A
+#+GRADE: 0.900
+#+GRADED-BY: John Kitchin

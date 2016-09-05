@@ -1,0 +1,186 @@
+#+ASSIGNMENT: exam-3-eb-cstr
+#+POINTS: 5
+#+CATEGORY: exam3
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-12-09 Wed 10:20>
+
+The production of propylene glycol occurs in a CSTR with a heat exchanger.
+
+The reaction is A + B \rightarrow C
+A = propylene oxide
+B = water
+C = propylene glycol
+
+Initially the CSTR starts out with water in it at 75 degF in a 67 ft^3 reactor. The feed stream contains 80 lbmol/h of propylene oxide (A), 1000 lbmol of water (B) and 100 lbmol of methanol (M) which is inert.
+
+The molar densities of each component are:
+\rho_A 0.923 lbmol / ft^3
+\rho_B 3.45 lbmol/ft^3
+\rho_M 1.54 lbmol / ft^3
+You can assume these are independent of composition and temperature
+
+Heat exchanger data:
+UA = 16000 BTU/h/degF
+coolant flowrate (mc) = 1000 lbmol / hour
+coolant  heat capacity = 18 BTU/lbmol/degF
+coolant temperature (Ta) = 60 degF
+The rate of heat transfer is given by:
+#+BEGIN_SRC python
+Qdot = mc * Cpb * (Ta - T) * (1 - np.exp(-UA / (mc * Cpb)))
+#+END_SRC
+
+Heat capacity data
+Cpa = 35 BTU/lbmol/degF
+Cpb = 18 BTU/lbmol/degF
+Cpc = 46 BTU / lbmol/degF
+Cpm = 19.5 BTU / lbmol/degF
+
+The heat of reaction is -36000 BTU/lbmol A, and is assumed to be constant.
+
+The rate constant for the reaction is:
+#+BEGIN_SRC python
+k = 16.96e12 * np.exp(-32400.0 / 1.987 / (T + 460.0))
+#+END_SRC
+
+The reaction is pseudo-first order in A, so -rA = k(T) C_A.
+
+The reactants decompose if they get above 170 degF.
+
+1. Estimate the maximum feed temperature you can use to avoid decomposition. Show a plot of the temperature vs. time.
+
+2. *Explain qualitatively why the temperature profile looks the way it does.*
+
+3. Estimate the exit concentration of propylene glycol for the feed temperature you found in part 1.
+
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+from matplotlib import pyplot as plt
+
+# molar flows
+Fa0 = 80.0
+Fb0 = 1000.0
+Fc0 = 0.0
+Fm0 = 100.0
+
+# molar densities
+rhoA = 0.923
+rhoB = 3.45
+rhoM = 1.54
+
+UA = 16000.
+Ta = 60.0  # coolant T
+mc = 1000.0
+
+# Heat capacities
+Cpa = 35
+Cpb = 18
+Cpc = 46
+Cpm = 19.5
+
+Hrx = -36000.0
+
+V = 67.0   # reactor volume
+#Tfeed = ???
+v0 = Fa0/rhoA +Fb0/rhoB+Fm0/rhoM
+Cm = Fm0/v0
+def cstr(Y,t,Tfeed):
+    Na,Nb,Nc,T = Y
+    k = 16.96e12 * np.exp(-32400.0 / 1.987 / (T + 460.0))
+    
+    Ca = Na/V
+    Cb = Nb/V
+    Cc = Nc/V
+    
+    r = k*Ca
+    ra = -r
+    rb = -r
+    rc = r
+    
+    Fa = Ca*v0
+    Fb = Cb*v0
+    Fc = Cc*v0
+    
+    Qdot = mc * Cpb * (Ta - T) * (1 - np.exp(-UA / (mc * Cpb)))
+    dNadt = Fa0-Fa+ra*V
+    dNbdt = Fb0-Fb+ra*V
+    dNcdt = Fc0-Fc+ra*V
+    nCp = V*(Ca*Cpa+Cb*Cpb+Cc*Cpc+Cm*Cpm)
+    dTdt = ((Fa0*Cpa+Fb0*Cpb+Fm0*Cpm)*(Tfeed-T)-Hrx*r*V+Qdot)/nCp
+    return [dNadt,dNbdt,dNcdt,dTdt]
+T0 =75+273.15    
+Y0 = [0,1000/rhoB,0,T0]
+
+tspan = np.linspace(0,25)
+Tmax = []
+Tfeedspan = np.linspace(300,150+270)
+for Tfeed in Tfeedspan:
+    sol = odeint(cstr,Y0,tspan,args=(Tfeed,))
+    TMAX = max(sol[:,3])
+    Tmax.append(TMAX)
+
+plt.plot(Tfeedspan,Tmax)
+plt.xlabel('TFeed')
+plt.ylabel('Tmax')
+plt.savefig('figure1.png')
+#[[.\figure1.png]]
+Tfeed = 440
+def cstr(Y,t):
+    Na,Nb,Nc,T = Y
+    k = 16.96e12 * np.exp(-32400.0 / 1.987 / (T + 460.0))
+    
+    Ca = Na/V
+    Cb = Nb/V
+    Cc = Nc/V
+    
+    r = k*Ca
+    ra = -r
+    rb = -r
+    rc = r
+    
+    Fa = Ca*v0
+    Fb = Cb*v0
+    Fc = Cc*v0
+    
+    Qdot = mc * Cpb * (Ta - T) * (1 - np.exp(-UA / (mc * Cpb)))
+    dNadt = Fa0-Fa+ra*V
+    dNbdt = Fb0-Fb+ra*V
+    dNcdt = Fc0-Fc+ra*V
+    nCp = V*(Ca*Cpa+Cb*Cpb+Cc*Cpc+Cm*Cpm)
+    dTdt = ((Fa0*Cpa+Fb0*Cpb+Fm0*Cpm)*(Tfeed-T)-Hrx*r*V+Qdot)/nCp
+    return [dNadt,dNbdt,dNcdt,dTdt]
+T0 =75+273.15    
+Y0 = [0,1000/rhoB,0,T0]
+
+tspan1 = np.linspace(0,10)
+
+sol = odeint(cstr,Y0,tspan)
+plt.figure(2)
+plt.plot(tspan,sol[:,3])
+plt.xlabel('time')
+plt.ylabel('T')
+plt.savefig('figure2.png')
+#[[.\figure2.png]]
+#+END_SRC
+
+#+RESULTS:
+
+#+TURNED-IN: Wed Dec  9 10:18:39 2015
+From first picture we can guess Tfeed = 440K
+
+* feedback
+[[elisp:(goto-char 2707)][(harithirumalai) line 111:]] wrong. BTU is a unit of heat in degF
+
+[[elisp:(goto-char 2601)][(harithirumalai) line 109:]] transiently, concentration and flow rate of inerts vary. so heat contribution will also vary. 
+
+[[elisp:(goto-char 3915)][(harithirumalai) line 170:]] no plots embedded
+
+[[elisp:(goto-char 3870)][(harithirumalai) line 169:]] no explanation
+
+
+* Grade
+#+technical: D
+#+presentation: C
+#+GRADE: 0.360
+#+GRADED-BY: Hari Thirumalai

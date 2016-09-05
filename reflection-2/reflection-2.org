@@ -1,0 +1,18 @@
+#+ASSIGNMENT: reflection-2
+#+POINTS: 1
+#+CATEGORY: participation
+#+RUBRIC: (("participation" . 1.0))
+#+DUEDATE: <2015-09-14 Mon>
+
+Create a numbered list of the most important concepts from today's lecture. List at least three things.
+
+1, Event trigerred and event index.
+2, Rate laws; intensive reaction rate and species rate of production.
+3, Odeint function to solve ordinary differential equations.
+4, "Always plot when you can". Check the answer computer provided.
+#+TURNED-IN: Mon Sep 14 09:27:23 2015
+
+* Grade
+#+participation: P
+#+GRADE: 1.000
+#+GRADED-BY: John Kitchin

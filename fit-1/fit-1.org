@@ -1,0 +1,115 @@
+#+ASSIGNMENT: fit-1
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . [[ rongchao@andrew.cmu.edu]] 0.3))
+#+DUEDATE: <2015-10-23 Fri 23:59>
+
+The conversion of methyl isonitrile ($\ce{CH_{3}NC}$) to acetonitrile ($\ce{CH_{3}CN}$) is a first order reaction:
+
+$\ce{CH_{3}NC \rightarrow CH_{3}CN}$
+
+A table of data monitoring the partial pressure of $\ce{CH_{3}NC}$ as it reacts to form $\ce{CH_{3}CN}$ is given below. Using this information,
+
+1. Determine the rate constant, its 95% confidence limits and its units.
+2. Show graphically that your calculated rate constant describes the data.
+3. Demonstrate that the rate constant you calculated minimizes the error between the fit and the data.
+
+Provided data:
+#+TBLNAME: data
+| Time (min) | Pressure CH3NC (torr) |
+|------------+-----------------------|
+|          0 |                   150 |
+|         20 |                   140 |
+|         42 |                   130 |
+|         83 |                   115 |
+|        167 |                    88 |
+|        250 |                    68 |
+|        333 |                    52 |
+|        500 |                    31 |
+
+Additional information:
+T = 298 K
+R = 62.36367  L*Torr/mol/K
+
+
+#+BEGIN_SRC python :var data=data
+import numpy as np
+import matplotlib.pyplot as plt
+from pycse import deriv, regress, nlinfit
+
+# Import the data
+t = np.array([0,20,42,83,167,250,333,500])  # Time (min)
+P = np.array([150,140,130,115,88,68,52,31])  # Pressure CH3NC (Torr)
+
+R = 62.36367
+T = 298
+
+Ca = P/R/T
+
+# fit the data
+pCa = np.polyfit(t, Ca, 4)
+fCa = np.polyval(pCa,t)
+
+# Get the derivative
+dCadt = np.polyval(np.polyder(pCa),t)
+#dCadt = deriv(t,Ca)
+
+# -dCadt = kCa
+x = Ca
+X = np.column_stack([x])
+y = -dCadt
+p,pint,se = regress(X,y,0.05)
+k_range = pint[0]
+k = p[0]
+print('k ={0} 1/min'.format(k))
+print('k = {0} at the 95% confidence level'.format(k_range)) 
+
+
+from scipy.integrate import odeint
+tspan = np.linspace(0,500)
+Ca0 = Ca[0]
+def ode(c,t):
+    dcdt = -k*c
+    return dcdt
+Cfit = odeint(ode,Ca0,tspan)
+Pfit = Cfit*R*T
+plt.subplot(1,2,1)
+plt.plot(t,P,'ko')
+plt.plot(tspan,Pfit)
+plt.xlabel('$t$ (min)')
+plt.ylabel('$P_A$ (Pa)')
+
+
+Kspan = np.linspace(k_range[0],k_range[1])
+E=[]
+for thisk in Kspan:
+    
+    e = sum((-dCadt - thisk*Ca)**2)
+    E.append(e)
+plt.subplot(1,2,2)
+plt.plot(Kspan,E)
+plt.xlabel('$k$')
+plt.ylabel('$Error$')
+plt.tight_layout()
+plt.savefig('figure1.png')
+
+
+
+# [[.\figure1.png]]
+#[[.\figure2.png]]
+#
+#+END_SRC
+
+#+RESULTS:
+: k =0.00323115325248 1/min
+: k = [ 0.00309935  0.00336295] at the 95% confidence level
+
+From the error versus k function we can see our k did minimizes the error, so it's a good fit.
+#+TURNED-IN: Sat Oct 24 21:53:35 2015
+
+* Grade
+#+technical: A-
+#+presentation: A
+#+GRADE: 0.865
+#+GRADED-BY: 
+#+LATE: Your assignment was late. You may be subject to a 50% penalty in the future.

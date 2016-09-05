@@ -1,0 +1,72 @@
+#+ASSIGNMENT: creative-2
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-11-23 Mon>
+
+Create your own problem on kinetic parameter estimation. You must use data from a scientific paper, and you must include a full citation for the paper in your solution. Your problem should use the estimated parameters in some kind of design problem. You must provide a full solution with an explanation the solution (similar to the solutions posted for other problems).
+
+Problem: In reactor design for water treatment, the tamarind nut shell activated carbon (TNSAC) has been used to evaluate the performance for phosphate adsorption. The pseudo-first order equation of Lagergren is generally expressed as follows:[1]
+$\frac{dq_t}{dt} = k_1(q_e-q_t)$
+where $q_e$ and $q_t$ are the sorption capacity at equilibrium and at time $t$ and $k_1$ is the rate constant of pseudo-first order sorption.
+
+The experimental data are listed as follows:[2]
+t(min) = [0, 1, 2, 5, 10, 20, 30, 40, 60, 80, 100, 120, 140]
+Pt(mg/L) = [55.00, 35.04, 32.00, 25.80, 21.20, 14.48, 13.60, 4.40, 3.36, 3.20, 3.12, 2.60, 2.60]
+Use the experimental data to solve for the rate constant and its 95% confidence interval.
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+from pycse import nlinfit
+
+
+t = np.array([0, 1, 2, 5, 10, 20, 30, 40, 60, 80, 100, 120]); #min
+Pt = np.array([45.00, 40.80, 38.00, 37.00, 36.40, 35.00, 33.04, 32.40, 32.00, 31.60, 30.80, 30.80]);#mg/L
+
+M = 95 #mol/g
+Ct = Pt/M #mmol/L
+
+Ceq = Ct[-1];
+C0 = Ct[0];
+def dcdt(C,t,k):
+    return -k*(C-Ceq)
+
+def model(t,k):
+    C = odeint(dcdt, C0,t,args=(k,))
+    return C[:,0]
+
+guess = [1]
+
+p,pint,se = nlinfit(model,t,Ct,guess,0.05)
+import matplotlib.pyplot as plt
+plt.plot(t,Ct,'ko')
+plt.plot(t,model(t,p))
+plt.savefig('figure.png')
+
+k_int = pint
+print 'The rate constant for pseudo-first order reaction is {0} 1/min'.format(p,)
+print 'k = {0} at the 95% confidence level'.format(k_int)
+
+#[[./figure.png]]
+#+END_SRC
+
+#+RESULTS:
+: The rate constant for pseudo-first order reaction is [ 0.13147619] 1/min
+: k = [[ 0.06235118  0.20060121]] at the 95% confidence level
+We can see this pseudo-first order reaction model fitting of experimental data is just a simple fitting and hence more models such as pseudo-second order has been put forward.
+
+[1]  Hameed, B. H.; Ahmad, A. A.; Aziz, N., Adsorption of reactive dye on palm-oil industry waste: Equilibrium, kinetic and thermodynamic studies. Desalination 2009, 247 (1-3), 551-560.
+
+[2]  Bhargava, D. S.; Sheldarkar, S. B., USE OF TNSAC IN PHOSPHATE ADSORPTION STUDIES AND RELATIONSHIPS - LITERATURE, EXPERIMENTAL METHODOLOGY, JUSTIFICATION AND EFFECTS OF PROCESS VARIABLES. Water Research 1993, 27 (2), 303-312.
+
+#+TURNED-IN: Mon Nov 23 15:48:44 2015
+
+* feedback
+[[elisp:(goto-char 2004)][(jkitchin) line 50:]] this fit does not look good. No design problem
+
+
+* Grade
+#+technical: B-
+#+presentation: B
+#+GRADE: 0.665
+#+GRADED-BY: John Kitchin

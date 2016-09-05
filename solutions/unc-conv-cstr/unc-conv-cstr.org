@@ -1,0 +1,162 @@
+#+ASSIGNMENT: unc-conv-cstr
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-28 Wed 23:59>
+
+Chemicals $\ce{A}$ and $\ce{B}$ form $\ce{C}$ in the following equilibrium reaction:
+
+$\ce{A + B <=>[k_{1}][k_{2}] 2C}$
+
+The liquid-phase reaction takes place in a CSTR with a volume of 10 L. The inlet stream has a volumetric flow rate of 1.5 L/s which has a 50/50 molar composition of chemicals $\ce{A}$ and $\ce{B}$ at a total concentration of 1 M. The rate constants are $k_{1} = 60.0 \pm 6.0 \frac{L}{mol \cdot s}$ and $k_{2} = 35.0 \pm 4.0 \frac{L}{mol \cdot s}$.
+
+1. At steady state, determine the mean exit concentration of $\ce{C}$ and its 95% confidence interval.
+
+2. If the reactor was designed to achieve 40% conversion of reactants, how likely is that to happen with this configuration? Discuss the tradeoffs in increasing the probability of success.
+
+* Solution
+The easiest approach to this problem is a Monte Carlo simulation. We need to generate distributions of each rate constant, and solve the reactor problem for each one.
+
+r_A = -k1 Ca*Cb + k2 Cc**2
+    = -k1 * (Ca*Cb - Cc**2 / Keq)
+
+We use the CSTR mole balance for species A, and relate the concentrations of the other species by reaction extent.
+
+#+BEGIN_SRC python
+from scipy.optimize import fsolve
+import numpy as np
+import matplotlib.pyplot as plt
+
+N = 10000
+K1 = np.random.normal(60.0, 6.0, N)  # L / mol / s
+K2 = np.random.normal(35.0, 4.0, N)  # L / mol / s
+
+v0 = 1.5   # L / s
+V = 10     # L
+
+Ca0 = Cb0 = 0.5  # mol / L
+Cc0 = 0.0  # mol / L
+
+Fa0 = v0 * Ca0  # mol / s
+
+
+def cstr(Ca, k1, k2):
+    Keq = k1 / k2
+
+    xi = (Ca - Ca0) / (-1)  # compute reaction extent
+    Cb = Cb0 - 1*xi
+    Cc = Cc0 + 2*xi
+
+    ra = -k1 * (Ca * Cb - (Cc)**2.0 / Keq)
+    return Fa0 - Ca * v0 + V * ra
+
+
+Ca = []
+for k1, k2 in zip(K1, K2):
+    ca_exit, = fsolve(cstr, 0.25, args=(k1, k2))
+    Ca.append(ca_exit)
+
+Cc = 2 * (Ca0 - np.array(Ca))
+
+pbar = np.mean(Cc)
+pstd = np.std(Cc)
+
+print('The average exit concentration of A is {0:1.3f} mol/L'.format(np.mean(Ca)))
+print('The average exit concentration of C is {0:1.3f} mol/L'.format(pbar))
+print('The standard deviation is {0:1.3f} mol/L'.format(pstd))
+
+# 95% confidence interval is $\mu \pm 1.96 \sigma$ for a normal distribution.
+print('The approximate 95% confidence interval is {0:1.3f} to {1:1.3f} mol/L'
+      .format(pbar - 1.96*pstd, pbar + 1.96*pstd))
+
+plt.hist(Cc, bins=20)
+plt.xlabel('Exit concentration of C (mol/L)')
+plt.ylabel('Frequency')
+plt.savefig('Cdistribution.png')
+#+END_SRC
+
+#+RESULTS:
+: The average exit concentration of A is 0.302 mol/L
+: The average exit concentration of C is 0.396 mol/L
+: The standard deviation is 0.019 mol/L
+: The approximate 95% confidence interval is 0.359 to 0.432 mol/L
+
+
+[[./Cdistribution.png]]
+
+Based on the average exit concentration of C, we calculate this exit conversion:
+
+#+BEGIN_SRC python
+Ca0 = 0.5
+
+# solve for X based on exit Cc
+def objective(X):
+   return 0.396 - 2 * (Ca0 * X)
+
+from scipy.optimize import fsolve
+print fsolve(objective, 0.4)
+
+# another approach
+print (Ca0 - 0.302) / Ca0
+#+END_SRC
+
+#+RESULTS:
+: [ 0.396]
+: 0.396
+
+This almost exactly what the reactor was designed for. However, there is only about a 50% chance that the design actually meets this criteria, because about half of the solutions have lower exit concentrations of C.
+
+We could increase the probability of success by increasing the reactor volume (at increased capital expense), or decreasing the volumetric flow which decreases the molar flow of C at the exit. However, this is an equilibrium limited reaction, so you actually need to determine the equilibrium limit to see how close to it you are. If you increase the volume, you find limited increase in conversion, because you are already close to it. So, you would have to consider a membrane reactor to remove products.
+
+
+** Solution with uncertainties
+
+#+name: uncertainties
+#+BEGIN_SRC python
+import uncertainties as u
+from scipy.optimize import fsolve
+
+k1 = u.ufloat(60, 6)
+k2 = u.ufloat(35, 4)
+
+v0 = 1.5   # L / s
+V = 10     # L
+
+Ca0 = Cb0 = 0.5  # mol / L
+Cc0 = 0.0  # mol / L
+
+Fa0 = v0 * Ca0  # mol / s
+
+
+# the regular equation we have to solve
+def cstr(Ca, k1, k2):
+    Keq = k1 / k2
+
+    xi = (Ca - Ca0) / (-1)  # compute reaction extent
+    Cb = Cb0 - 1*xi
+    Cc = Cc0 + 2*xi
+
+    ra = -k1 * (Ca * Cb - (Cc)**2.0 / Keq)
+    return Fa0 - Ca * v0 + V * ra
+
+@u.wrap
+def cstr_solve(_k1, _k2):
+    ca_exit, = fsolve(cstr, 0.25, args=(_k1, _k2))
+    return ca_exit
+
+
+ca_exit = cstr_solve(k1, k2)
+print 'The exit Ca concentration is {}'.format(ca_exit)
+
+cc_exit = 2 * (Ca0 - ca_exit)
+print 'The exit Cc is {0} +/- {1} M'.format(cc_exit.nominal_value,
+                                            cc_exit.std_dev*1.96)
+
+# another approach
+print 'The exit conversion is {}'.format((Ca0 - ca_exit) / Ca0)
+#+END_SRC
+
+#+RESULTS: uncertainties
+: The exit Ca concentration is 0.303+/-0.009
+: The exit Cc is 0.394997275201 +/- 0.0355140716568 M
+: The exit conversion is 0.395+/-0.018

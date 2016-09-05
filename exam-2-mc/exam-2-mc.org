@@ -1,0 +1,134 @@
+#+ASSIGNMENT: exam-2-mc
+#+POINTS: 6
+#+CATEGORY: exam2
+#+RUBRIC: multiple-choice
+#+DUEDATE: <2015-11-04 Wed 10:20>
+
+* ID:1525 Large Equilibrium Constants
+  :PROPERTIES:
+  :ID:       2F5BCA86-1933-432F-9A8A-891339C05DF7
+  :ANSWER:   a
+  :END:
+
+If a reaction has an equilibrium constant that is significantly large (KC >>1), which of the following statements can be made about the reaction?
+
+[[mc:a]] The reaction will favor production of reactants.
+
+[[mc:b]] The reaction will favor production of products.
+
+[[mc:c]] The reaction will proceed quickly.
+
+[[mc:d]] The reaction will proceed slowly.
+
+[[mc:e]] Both the rate of reaction and extent of reaction can be determined from KC
+#+2F5BCA86-1933-432F-9A8A-891339C05DF7: a
+* ID:1524 Comparison of Equilibrium Constants
+  :PROPERTIES:
+  :ID:       784CF3B1-9158-410E-B97A-1E992221A4E6
+  :ANSWER:   d
+  :END:
+
+Compare the following two reactions:
+    I) N2O4(g) <--> 2 NO2(g)		 KC = 0.211
+    II) CO(g) + Cl2(g) <--> COCl2 (g)	 KC = 4.57 x 10^9
+Which of the following statements is correct?
+
+[[mc:a]] Reaction I will proceed faster because KC is larger.
+
+[[mc:b]] Reaction II will proceed faster because KC is larger.
+
+[[mc:c]] Reaction I favors the production of products.
+
+[[mc:d]] Reaction II favors the production of products.
+
+[[mc:e]]  None of these statements is correct.
+#+784CF3B1-9158-410E-B97A-1E992221A4E6: d
+* ID:1530 Effect of Cooling on Equilibrium Constant
+  :PROPERTIES:
+  :ID:       E741F064-A1A1-4A00-A581-7EF066DAE9A0
+  :ANSWER:   b
+  :END:
+
+Consider the following reaction:
+Br2(g) + heat <--> 2 Br(g)	 KC = 1.04 x 10^{-3} at 1285C
+When the reaction is cooled down to room temperature, what happens to KC?
+
+[[mc:a]] Changing the temperature doesn’t change KC
+
+[[mc:b]] KC will decrease because of the lower temperature
+
+[[mc:c]] KC will decrease because the volume occupied by the gas becomes smaller
+
+[[mc:d]] KC will increase because of the lower temperature.
+
+[[mc:e]] KC will increase because the volume occupied by the gas becomes smaller
+#+E741F064-A1A1-4A00-A581-7EF066DAE9A0: b
+* ID:1532 Effect of Volume Change on Equilibrium
+  :PROPERTIES:
+  :ID:       51E3786D-D4E4-4156-A5ED-8C56C94022E8
+  :ANSWER:   e
+  :END:
+
+Consider the following reaction:
+2 NO2Cl(g) --> 2NO2(g) + Cl2(g)	 KC = 0.558
+If the volume of this equilibrium system is cut in half, what will happen to the equilibrium constant?
+
+[[mc:a]] The new KC will be larger than the original because of a temperature increase.
+
+[[mc:b]] The new KC will be larger than the original because the reaction shifts to the left.
+
+[[mc:c]] The new KC will be smaller than the original because of a temperature increase.
+
+[[mc:d]] The new KC will be smaller than the original because the reaction shifts to the left.
+
+[[mc:e]] KC will stay the same.
+#+51E3786D-D4E4-4156-A5ED-8C56C94022E8: e
+* ID:1526 System in Equilibrium
+  :PROPERTIES:
+  :ID:       D54A69A5-7E1C-41EE-9698-3159E49784F7
+  :ANSWER:   c
+  :END:
+
+Once a system reaches equilibrium:
+
+[[mc:a]] The forward and reverse reactions no longer occur.
+
+[[mc:b]] The forward and reverse reactions continue to occur and alter the concentrations of reactants and products.
+
+[[mc:c]] The forward and reverse reactions occur, but do not alter the concentrations of the reactants or products.
+
+[[mc:d]]  Only the forward reaction continues to occur.
+
+[[mc:e]]  Only the reverse reaction continues to occur.
+#+D54A69A5-7E1C-41EE-9698-3159E49784F7: c
+* ID:1527 Effect of Adding Reactants on Equilibrium
+  :PROPERTIES:
+  :ID:       F19C2134-04D1-432D-81CC-16C54FE26844
+  :ANSWER:   e
+  :END:
+Consider the following reaction:
+
+H2(g) + F2(g) <--> 2 HF(g)
+
+A flask containing these three chemical species is at equilibrium.  Additional H2 is added to the flask.  As the system returns to equilibrium, which of the following compounds will experience a change in concentration as the system approaches equilibrium?
+
+[[mc:a]] H2
+
+[[mc:b]] F2
+
+[[mc:c]] HF
+
+[[mc:d]] Two of the above
+
+[[mc:e]] All of the above
+#+F19C2134-04D1-432D-81CC-16C54FE26844: e
+#+TURNED-IN: Wed Nov  4 10:18:30 2015
+
+* Grade
+# id:2F5BCA86-1933-432F-9A8A-891339C05DF7: a wrong (b is correct)
+# id:784CF3B1-9158-410E-B97A-1E992221A4E6: d correct
+# id:E741F064-A1A1-4A00-A581-7EF066DAE9A0: b correct
+# id:51E3786D-D4E4-4156-A5ED-8C56C94022E8: e wrong (d is correct)
+# id:D54A69A5-7E1C-41EE-9698-3159E49784F7: c correct
+# id:F19C2134-04D1-432D-81CC-16C54FE26844: e correct
+#+GRADE: 0.6666666666666666

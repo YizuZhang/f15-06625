@@ -1,0 +1,103 @@
+#+ASSIGNMENT: mol-change-pfr
+#+POINTS: 2
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-22 Tue>
+
+5 mol / min of species A flows into into a 100 L plug flow reactor. Only 1 mol / min of A flows out of the reactor. Assuming that the reaction 2A \rightarrow B occurs, with a rate law of -rA = k C_A^2, and k = 2 L / mol / min, what volumetric flow rate is required to observe this?
+
+* Solution
+The key to this problem is recognizing we need to guess a volumetric flow so we can integrate the PFR design equation, and then we have to iteratively change the initial guess to get the solution. You could do this by hand, or you can setup fsolve do it too. Below, we use fsolve. For that, we need a function that takes the volumetric flow, and that is zero when the exit concentration is zero. We will assume this is a gas phase reaction, and so we also have to realize that there is a mole change, so the volumetric flow will actually change. It was not necessary to assume gas-phase; you could have assumed constant volumetric flow and a liquid reaction, but you must say that is what you are doing.
+
+Our design equation is:
+
+\(\frac{dF_A}{dV} = r_A = -k Ca^2\)
+\(\frac{dF_B}{dV} = r_B\)
+
+to get Ca, we need $Fa / \nu$, and since \nu depends on the total molar flow as \(\nu = \nu_0 Ft / Ft0\), we need to know the flow rates of each species.
+
+r = rA / -2 = rB / 1
+
+so, rB = -0.5 * rA
+
+Here is a manual iteration of the solution:
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+
+Fa0 = 5.0  # mol / min
+V = 100.0  # L
+k = 2      # L/mol/min
+Fa_exit = 1.0  # mol / min
+Ft0 = Fa0
+
+v0 = 22.3 # Iterate on this to get the solution
+
+def dFdV(F, V):
+    Fa, Fb = F
+    Ft = Fa + Fb
+    v = v0 * Ft / Ft0
+    Ca = Fa / v
+    rA = -k * Ca**2
+    rB = -0.5 * rA
+    dFadV = rA
+    dFbdV = rB
+    return [dFadV, dFbdV]
+
+Vspan = np.linspace(0, V)
+F0 = [Fa0, 0]
+sol = odeint(dFdV, F0, Vspan)
+
+Fa = sol[:, 0]
+Fb = sol[:, 1]
+Fa_exit = Fa[-1]
+
+print('Fa_exit = {0} mol/min at v0 = {1} L/min'.format(Fa[-1], v0))
+#+END_SRC
+
+#+RESULTS:
+: Fa_exit = 0.996576386486 mol/min at v0 = 22.3 L/min
+
+
+Here is a more sophisticated approach with fsolve. Note it is necessary to "vectorize" this objective function so that it can take a vector/array and return a vector/array. That is useful for fsolve, but non-obvious to do! I didn't expect you to do this in your solution, but we will see the vectorize decorator again in the future.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+
+Fa0 = 5.0  # mol / min
+V = 100.0  # L
+k = 2      # L/mol/min
+Fa_exit = 1.0  # mol / min
+
+
+@np.vectorize
+def objective(v0):
+    Ft0 = Fa0
+    def dFdV(F, V):
+        Fa, Fb = F
+        Ft = Fa + Fb
+        v = v0 * Ft / Ft0
+        Ca = Fa / v
+        rA = -k * Ca**2
+        rB = -0.5 * rA
+        dFadV = rA
+        dFbdV = rB
+        return [dFadV, dFbdV]
+
+    Vspan = np.linspace(0, V)
+    F0 = [Fa0, 0]
+    sol = odeint(dFdV, F0, Vspan)
+
+    Fa = sol[:, 0]
+
+    return Fa[-1] - Fa_exit
+
+from scipy.optimize import fsolve
+ans, = fsolve(objective, 20)
+print('v0 = {0} L/min'.format(ans))
+#+END_SRC
+
+#+RESULTS:
+: v0 = 22.3343467442 L/min

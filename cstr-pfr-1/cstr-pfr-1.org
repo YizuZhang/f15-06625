@@ -1,0 +1,60 @@
+#+ASSIGNMENT: cstr-pfr-1
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-02 Fri 23:59>
+
+The liquid-phase reaction $\ce{A + 2B -> 2D}$ has the rate law $r = k C_A^{0.5}C_B$, with $k = 2.4$ (L/mol)^{0.5}/min. Assuming a volumetric flow of 0.5 L/min at concentrations $C_A = 1.0$ mol/L and $C_B = 2.5$ mol/L is available, determine whether a PFR or a CSTR as a smaller volume to achieve 90% conversion of A.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.optimize import fsolve
+from pycse import odelay
+
+k = 2.4 # (L/mol)^0.5/min
+v0 = 0.5 # L/min
+Ca0 = 1.0 # mol/L
+Cb0 = 2.5 # mol/L
+Caexit = 0.1 * Ca0 # 90% conversion of A
+x = (Caexit - Ca0)/(-1) # reaction extent
+Cbexit = Cb0 - 2*x      # exit concentration
+Fa0 = Ca0 * v0
+Fb0 = Cb0 * v0
+Faexit = Caexit * v0
+def cstr(V):
+    ra = -k * Caexit**0.5 * Cbexit 
+    return Fa0-Faexit+ V*ra
+guess = 1
+Vc, = fsolve(cstr,10)
+print ('Volume needed for CSTR is {0:.4f} L'.format(Vc))
+def pfr(Fa,V):
+    xi = Fa-Fa0 
+    Fb = Fb0 + 2 * xi
+    Ca = Fa/v0
+    Cb = Fb/v0
+    ra = -k * Ca**0.5 * Cb
+    dFadV = ra
+    return dFadV
+def event(Fa,V):
+    value = Fa-Faexit
+    isterminal = True
+    direction = 0
+    return value, isterminal, direction
+Vspan = np.linspace(0,1)
+sol,t,xe,ye,ie = odelay(pfr,Fa0,Vspan,[event])
+print('Volume needed for PFR is {0:.4f} L'.format(sol[-1]))
+#+END_SRC
+
+#+RESULTS:
+: Volumn needed for CSTR is 0.8470 L
+: Volumn needed for PFR is 0.2263 L
+
+From the result we can see that PFR needs a smaller volume for certain conversion requirement.
+This is because the concentration in PFR is larger than that in CSTR, which leads to a larger reaction rate for this reaction.
+#+TURNED-IN: Wed Sep 30 15:07:36 2015
+
+* Grade
+#+technical: A
+#+presentation: A
+#+GRADE: 0.900
+#+GRADED-BY: Hari Thirumalai

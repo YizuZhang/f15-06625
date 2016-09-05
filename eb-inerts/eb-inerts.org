@@ -1,0 +1,85 @@
+#+ASSIGNMENT: eb-inerts
+#+POINTS: 3
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-12-03 Thu>
+
+The irreversible reaction $A \rightarrow B + C$ is carried out adiabatically in a 500 L PFR. Species A is fed to the reactor at a rate of 10 mol/min and a pressure of 2 atm. An inert stream is also fed to the reactor at a pressure of 2 atm. The temperature of both entrance streams is 1100K.
+
+a. Plot the exit conversion for a range of inert molar flows from 0 to 100 mol/min. Explain why there is a maximum in conversion.
+
+Additional information
+k = exp(34.3 - 34,222/T)  1/min                        CP,I=200 J/mol/K
+CP,A=170 J/mol/K
+CP,B=90 J/mol/K
+CP,C=80 J/mol/K
+Hrxn=80 kJ/mol
+
+
+#+BEGIN_SRC python
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+Cpi = 200  # J/mol/K
+Cpa = 170  # J/mol/K
+Cpb = 90   # J/mol/K
+Cpc = 80   # J/mol/K
+Hrxn = 80000   # J/mol/K
+
+T0 = 1100  # K
+Fa0 = 10    # mol/min
+P = 2 * 101325 # Pa 
+R = 8.314  # J/K/mol
+
+def pfr(F,V,Fi0):
+    Fa,T = F
+    extent = (Fa-Fa0)/(-1.0)
+    Fb = extent
+    Fc = extent
+    
+    Ft = Fa+Fb+Fc+Fi0
+    Ft0 = Fa0+Fi0
+    v0 = Ft0*T*R/P
+    k = np.exp(34.3-34222.0/T)
+    v = v0*Ft/Ft0*T/T0
+    Ca = Fa/v
+    r = k*Ca
+    ra = -r
+    dFadV = ra
+    dTdV = -Hrxn*r /(Fa*Cpa+Fb*Cpb+Fc*Cpc+Fi0*Cpi)
+    return [dFadV,dTdV]
+
+Vspan = np.linspace(0,0.5)
+Fspan = np.linspace(0,100)
+F0 = [Fa0,T0]
+
+X = []
+for Fi0 in (Fspan):
+    sol = odeint(pfr,F0,Vspan,args=(Fi0,))
+    Faexit = sol[-1,0]
+    Cov = (Faexit-Fa0)*(-1)/Fa0
+    X.append(Cov)
+    
+plt.plot(Fspan,X)
+plt.xlabel('Inert Molar Flowrate[mol/min]')
+plt.ylabel('Exit Conversion')
+plt.savefig('figure.png')
+#[[.\figure.png]]
+
+#+END_SRC
+
+#+RESULTS:
+From the result we can see there's a maximum of exit conversion when the molar flowrate of inert is increasing.
+The reaction is endothermic and with the inert flow, the decrease of temperature is alleviate, hence the rate constant relatively goes up and conversion goes up. Yet the addition of inert flow will decrease the residence time of the reactant, and decrease the exit conversion. With the balance these two, the exit conversion exhibits a maximum.
+#+TURNED-IN: Thu Dec  3 20:49:18 2015
+
+* feedback
+[[elisp:(goto-char 1727)][(harithirumalai) line 70:]] no plot.
+
+
+* Grade
+#+technical: A
+#+presentation: B
+#+GRADE: 0.840
+#+GRADED-BY: Hari Thirumalai

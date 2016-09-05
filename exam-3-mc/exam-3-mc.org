@@ -1,0 +1,135 @@
+#+ASSIGNMENT: exam-3-mc
+#+POINTS: 6
+#+CATEGORY: exam3
+#+RUBRIC: (("participation" . 1.0))
+#+DUEDATE: <2015-12-09 Wed 10:20>
+
+* 176. The conversion verses PFR volume was measured for feed temperatures of 500 K and 600 K.
+  :PROPERTIES:
+  :ID:       A7953C691-EE52-4FA7-9EDF-9CFFB5EB26D5
+  :ANSWER:   a
+  :END:
+
+#+attr_org: :width 300
+[[./pfr-conversion.png]]
+
+Which of these best describes the reaction:
+
+[[mc:a]] Exothermic, reversible
+
+[[mc:b]] Exothermic, irreversible
+
+[[mc:c]] Endothermic, irreversible
+
+[[mc:d]] Endothermic, reversible
+
+#+A7953C691-EE52-4FA7-9EDF-9CFFB5EB26D5: a
+
+* 183. Effect of inerts	on adiabatic exothermic reaction
+  :PROPERTIES:
+  :ID:       D2A37110-AA63-4691-B9AE-0E49756C798C
+  :ANSWER:   d
+  :END:
+
+The exothermic reaction A <--> B reaches an equilibrium conversion of 25% in an adiabatic steady state flow reactor. Which of the following will likely increase conversion?
+
+[[mc:a]]. Add a catalyst
+
+[[mc:b]] Raise the inlet temperature
+
+[[mc:c]] Use a bigger reactor
+
+[[mc:d]] Add an inert to the feed
+
+[[mc:e]] All of the above
+
+#+D2A37110-AA63-4691-B9AE-0E49756C798C: d
+* 61. Addition of catalyst
+  :PROPERTIES:
+  :ID:       BEF40CB1-B0DF-457E-BAF3-029A014C2600
+  :ANSWER:   d
+  :END:
+
+The energy diagram for the reaction X + Y -> Z is shown. The addition of a catalyst to this reaction would cause a change in which of the indicated energy differences?
+
+[[./add-catalyst.png]]
+
+[[mc:a]]  I only
+
+[[mc:b]]  II only
+
+[[mc:c]]  III only
+
+[[mc:d]]  I and II only
+Only the activation energy (forwards and backwards) is affected by a catalyst
+
+[[mc:e]]  I, II, and III
+#+BEF40CB1-B0DF-457E-BAF3-029A014C2600: d
+* 53a. Effectiveness factor
+  :PROPERTIES:
+  :ID:       A0B20DECF-AEAE-4E0A-BF61-96549CE3F5D3
+  :ANSWER:   a
+  :END:
+An isothermal, second-order reaction takes place in a porous catalyst sphere. The concentration of reactant is plotted as a function of radius for three spheres. Which catalyst has the largest effectiveness factor?
+
+#+attr_org: :width 300
+[[./conc-profiles.png]]
+
+[[mc:a]] 1
+
+[[mc:b]] 2
+
+[[mc:c]] 3
+
+[[mc:d]] same for all
+#+A0B20DECF-AEAE-4E0A-BF61-96549CE3F5D3: a
+* 353. Fast reaction in a pellet
+  :PROPERTIES:
+  :ID:       A6A0709A3-01A6-42D0-BC9E-4AB1737AB049
+  :ANSWER:   d
+  :END:
+Consider a porous catalyst sphere. Plots for CA in the catalyst pellet vs. distance into the pellet are shown. Which plot is most likely corresponding to a very fast reaction?
+
+[[./fast-rxn-pellet.png]]
+
+
+[[mc:a]] A
+This is an example of a very slow reaction
+
+[[mc:b]] B
+
+[[mc:c]] C
+
+[[mc:d]] D
+In a fast reaction, A will be consumed before it can diffuse into the pellet.
+#+A6A0709A3-01A6-42D0-BC9E-4AB1737AB049: d
+
+* 494. Parallel reactions in PBR
+  :PROPERTIES:
+  :ID:       A8871E1AF-6487-4AE5-8679-32F1438169E4
+  :ANSWER:   b
+  :END:
+The elementary parallel reactions shown below are carried out in a packed bed reactor that has a significant pressure drop. If there are no internal or external mass transfer limitations, when the catalyst particle size increases, the selectivity ______________.
+
+S -> D
+
+2S -> U
+
+[[mc:a]] increases
+
+[[mc:b]] decreases
+
+[[mc:c]] remains the same
+
+[[mc:d]] insufficient information
+#+A8871E1AF-6487-4AE5-8679-32F1438169E4: b
+#+TURNED-IN: Wed Dec  9 10:20:06 2015
+
+* Grade
+# id:A7953C691-EE52-4FA7-9EDF-9CFFB5EB26D5: a correct
+# id:D2A37110-AA63-4691-B9AE-0E49756C798C: d correct
+# id:BEF40CB1-B0DF-457E-BAF3-029A014C2600: d correct
+# id:A0B20DECF-AEAE-4E0A-BF61-96549CE3F5D3: a correct
+# id:A6A0709A3-01A6-42D0-BC9E-4AB1737AB049: d correct
+# id:A8871E1AF-6487-4AE5-8679-32F1438169E4: b correct
+#+GRADE: 1.0

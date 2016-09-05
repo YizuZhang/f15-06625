@@ -1,0 +1,117 @@
+#+ASSIGNMENT: quiz-1
+#+POINTS: 2
+#+CATEGORY: quiz
+#+RUBRIC: (("participation" . 1.0))
+#+DUEDATE: <2015-09-23 Wed>
+
+Instructions: For each problem, click on the mc links to record your answer. You will see a comment appear indicating your choice.
+
+When you are done, click this to turn it in: elisp:tq-turn-it-in
+
+[[./eyes.png]]
+
+* Python syntax
+  :PROPERTIES:
+  :ID:       DC8E7119-CF18-4747-B166-2BD1BF1D9663
+  :ANSWER:   c
+  :END:
+Which command will print 2.000 in Python?
+
+[[mc:a]] sprintf("%1.3f", 2.0)
+
+[[mc:b]] print("%1.3f".format(2.0))
+
+[[mc:c]] print("{0:1.3f}".format(2.0))
+
+[[mc:d]] sprint("{0:3.1f}".format(2.0))
+# you chose c
+* Under pressure
+  :PROPERTIES:
+  :ID:       084F0C49-6C3B-4FB9-AC97-C393BC39EAE8
+  :ANSWER:   c
+  :END:
+For the reaction 2A + B \rightarrow 3C, there is a reactor that reaches a conversion of 40%. If we replace the reactor with one that has a pressure drop in it (assuming everything else is the same), do you expect the conversion to:
+
+[[mc:a]] increase
+
+[[mc:b]] decrease
+
+[[mc:c]] stay the same
+
+[[mc:d]] not enough information to determine
+# you chose c
+* PFR vs CSTR
+  :PROPERTIES:
+  :ID:       A9DA7773-8054-40E4-8B96-A1FA338EC43A
+  :ANSWER:   a
+  :END:
+You are tasked with choosing between two reactors. We know the reaction is A goes to products, and it is first order in A. You can choose between a PFR and a CSTR and they are the same volume. Which one will give the highest conversion?
+
+[[mc:a]] PFR
+
+[[mc:b]] CSTR
+
+[[mc:c]] They give the same conversion
+
+[[mc:d]] not enough information to determine
+# you chose b
+# you chose a
+# you chose b
+# you chose a
+* Elementary, dear Watson
+  :PROPERTIES:
+  :ID:       323A4DCF-5F34-467C-89D6-889A784FF1DB
+  :ANSWER:   False
+  :END:
+
+The reaction H_2 + 1/2 O_2 \rightarrow H2O is elementary.
+
+[[mc:True]]
+
+[[mc:False]]
+
+[[mc:Neither]]
+
+# you chose False
+* Elementary school
+  :PROPERTIES:
+  :ID:       35866974-1DCD-4F38-8B1A-D13C515F59F8
+  :ANSWER:   a
+  :END:
+The reaction A + B \rightarrow C is considered to be elementary. Which rate law is most appropriate?
+
+[[mc:a]] r = k C_A C_B
+
+[[mc:b]] r = k C_A^2
+
+[[mc:c]] r = k C_A^{1/3} C_B^{2/3}
+# you chose a
+* Units
+  :PROPERTIES:
+  :ID:       7CC4390C-105C-42C1-98E2-ABC01891E46D
+  :ANSWER:   c
+  :END:
+
+The units of the reaction rate are
+
+[[mc:a]] mol/L
+
+[[mc:b]] mol/min
+
+[[mc:c]] mol/L/min
+# you chose c
+<<<<<<< HEAD
+#+TURNED-IN: Wed Sep 23 08:39:20 2015
+#+TURNED-IN-FAILED: Wed Sep 23 08:39:22 2015
+=======
+#+TURNED-IN: Wed Sep 23 08:38:30 2015
+
+* Grade
+# id:DC8E7119-CF18-4747-B166-2BD1BF1D9663: c correct
+# id:084F0C49-6C3B-4FB9-AC97-C393BC39EAE8: c wrong (b is correct)
+# id:A9DA7773-8054-40E4-8B96-A1FA338EC43A: a correct
+# id:323A4DCF-5F34-467C-89D6-889A784FF1DB: False correct
+# id:35866974-1DCD-4F38-8B1A-D13C515F59F8: a correct
+# id:7CC4390C-105C-42C1-98E2-ABC01891E46D: c correct
+#+GRADE: 0.8333333333333334
+>>>>>>> fca9631baeac1c1c4b94df3a85511d60cae17ab5

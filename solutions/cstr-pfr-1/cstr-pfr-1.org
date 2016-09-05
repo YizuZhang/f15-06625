@@ -1,0 +1,79 @@
+#+ASSIGNMENT: cstr-pfr-1
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-02 Fri 23:59>
+
+The liquid-phase reaction $\ce{A + 2B -> 2D}$ has the rate law $r = k C_A^{0.5}C_B$, with $k = 2.4$ (L/mol)^{0.5}/min. Assuming a volumetric flow of 0.5 L/min at concentrations $C_A = 1.0$ mol/L and $C_B = 2.5$ mol/L is available, determine whether a PFR or a CSTR as a smaller volume to achieve 90% conversion of A.
+
+
+* Solution
+
+The idea is just to calculate the volume of each reactor and compare them.
+
+** CSTR
+
+The equation to solve (from a mole balance) is $0 = F_{A0} - F_A + r_A V$.
+
+#+BEGIN_SRC python
+from scipy.optimize import fsolve
+# A + 2B -> 2D
+# It is a single reaction, so we can relate everything by stoichiometry
+
+CA0 = 1.0 # mol / L
+CB0 = 2.5 # mol / L
+v0 = 0.5   # L / min
+
+Fa0 = v0 * CA0
+Fb0 = v0 * CB0
+
+Fa_exit = Fa0 * (1 - 0.9) # known from design conversion
+
+def cstr_objective(V):
+    xi = (Fa_exit - Fa0) / (-1.0) # definition of extent
+    Fb = Fb0 + xi * (-2)
+
+    Ca = Fa_exit / v0
+    Cb = Fb / v0
+
+    ra = -2.4 * Ca**(0.5) * Cb
+
+    return Fa0 - Fa_exit + ra * V
+
+cstr_guess = 20
+cstr_vol = fsolve(cstr_objective, cstr_guess)
+
+# PFR. Here we have to solve $\frac{dF_A}{dV} = r_A$. We use an event to stop the integration at the desired exit molar flow.
+import numpy as np
+from pycse import odelay
+
+def dFadV(Fa, V):
+    xi = (Fa - Fa0) / (-1.0) # definition of extent
+    Fb = Fb0 + xi * (-2)
+
+    Ca = Fa / v0
+    Cb = Fb / v0
+
+    ra = -2.4 * Ca**(0.5) * Cb
+    return ra
+
+def event(Fa, V):
+    isterminal = True     # Make it stop
+    value = Fa - Fa_exit  # stop when Fa = Fa_exit we defined above
+    direction = 0
+    return value, isterminal, direction
+
+Vspan = np.linspace(0, 2)
+V, Fa, XE, YE, IE = odelay(dFadV, Fa0, Vspan, events=[event])
+
+pfr_vol = V[-1]
+print 'CSTR volume = {0:1.3f} L'.format(float(cstr_vol))
+print 'PFR volume  = {0:1.3f} L'.format(pfr_vol)
+#+END_SRC
+
+#+RESULTS:
+: CSTR volume = 0.847 L
+: PFR volume  = 0.226 L
+
+** Discussion
+ The PFR has considerably smaller volume required to reach the required conversion compared to the CSTR. This is typical for rate laws with positive orders because on average the rate in the PFR is higher than in the CSTR. The PFR starts out with concentrated reactants which decrease in concentration down the reactor, whereas the CSTR has uniformly low concentrations that are the same as the exit concentrations.

@@ -1,0 +1,60 @@
+#+ASSIGNMENT: quiz-2
+#+POINTS: 2
+#+CATEGORY: quiz
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-05 Mon 10:20>
+
+Solve the following equation for X. This equation comes from a reactor design problem, and X is the conversion. Use scipy.optimize.fsolve to get your answer.
+
+\(1 - 2X + X^2 = \frac{F_{A0}}{k C^2_{A0} V} X\)
+
+FA0 = 10
+k = 8.447
+CA0 = 1.0
+V = 200
+
+Make a plot that shows your answer is correct.
+
+* Solution
+We can reframe the problem so it is easy to use fsolve as follows:
+
+Find the value of X that satisfies
+
+\(0 = 1 - 2X + X^2 - \frac{F_{A0}}{k C^2_{A0} V} X\)
+
+Here is the solution with the plot.
+
+#+BEGIN_SRC python
+from scipy.optimize import fsolve
+import numpy as np
+
+FA0 = 10
+k = 8.447
+CA0 = 1.0
+V = 200
+
+def objective(X):
+    z = 1 - 2 * X + X**2 - FA0 / k / CA0**2 / V * X
+    return z
+
+ans1, = fsolve(objective, 0.99)
+ans2, = fsolve(objective, 1.1)
+print('The answers are: {}'.format([ans1, ans2]))
+
+Xspan = np.linspace(0.8, 1.1)
+
+import matplotlib.pyplot as plt
+plt.plot(Xspan, objective(Xspan))
+plt.plot(Xspan, 0 * Xspan, 'r-')
+plt.plot([ans1], [0],'ko')
+plt.xlabel('X')
+plt.ylabel('objective(X)')
+plt.savefig('plt.png')
+# [[./plt.png]]
+
+#+END_SRC
+
+#+RESULTS:
+: The answers are: [0.92596599005845714, 1.0799532712178321]
+
+You can see that there are two answers, which you might have suspected from the second-order polynomial nature of the objective function. We plotted a black dot on one solution, which shows the objective function is actually zero at that point. In the real reaction engineering problem, X is the conversion, and only one of the solutions (the one less than one) is correct. The other one is unphysical.

@@ -1,0 +1,124 @@
+#+ASSIGNMENT: exam-1-mc
+#+POINTS: 5
+#+CATEGORY: exam1
+#+RUBRIC: multiple-choice
+#+DUEDATE: <2015-10-07 Wed 10:20>
+
+* 356. Elementary reaction
+  :PROPERTIES:
+  :ID:       39299751-3142-4622-A051-98BA779493AB
+  :ANSWER:   b
+  :END:
+Which is most likely to be an elementary reaction?
+
+[[mc:a]]  2NO + O2 --> 2NO2
+
+[[mc:b]]  H2 + I2 --> 2HI
+
+[[mc:c]]  C2H6 --> C2H4 + H2
+
+[[mc:d]]  CO + O --> CO2
+
+[[mc:e]]  2NO2 --> 2NO + O2
+# you chose b
+# you chose d
+# you chose b
+* 516. Reaction order
+  :PROPERTIES:
+  :ID:       512C94CE-3B7A-4FE2-8164-16C10FDBFE38
+  :ANSWER:   a
+  :END:
+
+A student carries out a kinetics experiment and discovers that the reaction rate is independent of the concentration of reactant. What is the order of the reaction?
+
+[[mc:a]] zero order
+
+[[mc:b]] 1/2 order
+
+[[mc:c]] 1st order
+
+[[mc:d]] 2nd order
+
+[[mc:e]] 3rd order
+
+[[mc:f negative order]]
+# you chose a
+* 185. Changing volumetric flow
+  :PROPERTIES:
+  :ID:       EBA077D5-1853-41F1-AB8D-CC9C7D535608
+  :ANSWER:   b
+  :END:
+
+The gas-phase reaction $\ce{2A -> B}$ takes place in an isothermal, packed bed reactor with pressure drop. The volumetric flow rate at the reactor outlet will be ____________ at the reactor inlet.
+
+
+[[mc:a]] higher than
+
+[[mc:b]] lower than
+
+[[mc:c]] the same as
+
+[[mc:d]] insufficient information
+# you chose b
+* Under pressure
+  :PROPERTIES:
+  :ID:       084F0C49-6C3B-4FB9-AC97-C393BC39EAE8
+  :ANSWER:   d
+  :END:
+For the gas-phase reaction 2A + B \rightarrow 3C, there is a reactor that reaches a conversion of 40%. If we replace the reactor with one that has a pressure drop in it (assuming everything else is the same), do you expect the conversion to:
+
+[[mc:a]] increase
+
+[[mc:b]] decrease
+
+[[mc:c]] stay the same
+
+[[mc:d]] not enough information to determine
+# you chose b
+# you chose d
+# you chose b
+# you chose d
+* Units of a second order rate constant
+  :PROPERTIES:
+  :ID:       6C57972A-6E7E-4736-8307-383025543630
+  :ANSWER:   c
+  :END:
+
+What are the units of a second order rate constant?
+
+[[mc:a]]     mol / L / s
+
+[[mc:b]]     1 / s
+
+[[mc:c]]     L / mol / s
+
+[[mc:d]]     (mol / L)**2 / s
+# you chose c
+* Who is right?
+  :PROPERTIES:
+  :ID:       0A038E5A-D801-462D-90DD-4520D5072192
+  :ANSWER:   a
+  :END:
+Your company runs a reaction where the rate appears independent of concentration. You currently use a CSTR. A colleague suggests using a PFR with the same volume because it may increase conversion. You disagree. Who is right?
+
+[[mc:a]]  You.
+
+[[mc:b]]  Your colleague.
+
+[[mc:c]]  Not enough information to tell.
+#+TURNED-IN: Wed Oct  7 10:19:27 2015
+# you chose c
+# you chose a
+
+* feedback
+[[elisp:(goto-char 1)][(jkitchin) line 0:]] Come see me with your laptop. Your jmax is not updating for some reason. Thanks.
+
+
+* Grade
+# id:39299751-3142-4622-A051-98BA779493AB: b wrong (d is correct)
+# id:512C94CE-3B7A-4FE2-8164-16C10FDBFE38: a correct
+# id:EBA077D5-1853-41F1-AB8D-CC9C7D535608: b wrong (d is correct)
+# id:084F0C49-6C3B-4FB9-AC97-C393BC39EAE8: d wrong (b is correct)
+# id:6C57972A-6E7E-4736-8307-383025543630: c correct
+# id:0A038E5A-D801-462D-90DD-4520D5072192: a correct
+#+GRADE: 0.5

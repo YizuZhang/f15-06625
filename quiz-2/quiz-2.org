@@ -1,0 +1,61 @@
+#+ASSIGNMENT: quiz-2
+#+POINTS: 2
+#+CATEGORY: quiz
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-05 Mon 10:20>
+
+Solve the following equation for X. This equation comes from a reactor design problem, and X is the conversion. Use scipy.optimize.fsolve to get your answer.
+
+\(1 - 2X + X^2 = \frac{F_{A0}}{k C^2_{A0} V} X\)
+
+FA0 = 10
+k = 8.447
+CA0 = 1.0
+V = 200
+
+Make a plot that shows your answer is correct.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.optimize import fsolve
+import matplotlib.pyplot as plt
+
+Fa0 = 10.0
+k = 8.447
+Ca0 = 1.0
+V = 200.0
+
+
+def func1(X):
+    return 1-2*X+X**2
+def func2(X):
+    return Fa0*X/(k*V*Ca0**2)
+def fsol(X):
+    return func1(X) - func2(X)  # define fsol = func1 - func2 to use fsolve to find solution.
+guess = 0.5
+ans, = fsolve(fsol,guess)
+print ('The solution is x ={0:.4f}'.format(ans))
+Xspan = np.linspace(0,1)
+plt.plot(Xspan,func1(Xspan))
+plt.plot(Xspan,func2(Xspan))
+plt.legend(['func1','func2'],loc = 'best')
+plt.xlabel('X')
+plt.ylabel('func1 or func2')
+plt.savefig('figure.png')
+#+END_SRC
+
+#+RESULTS:
+: The solution is x =0.9260
+
+[[file:figure.png]]
+#+RESULTS:
+: The solution is x =0.9260
+
+From the figure we can see func1 and func2 intersect at around x = 0.9, that's where the solution is, so the solution of fsolve might be reasonable.
+#+TURNED-IN: Mon Oct  5 10:10:11 2015
+
+* Grade
+#+technical: A
+#+presentation: A-
+#+GRADE: 0.885
+#+GRADED-BY: John Kitchin

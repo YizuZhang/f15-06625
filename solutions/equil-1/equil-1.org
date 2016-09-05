@@ -1,0 +1,119 @@
+#+ASSIGNMENT: equil-1
+#+POINTS: 3
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-21 Wed 23:59>
+
+For the reaction $\ce{N_2O_4} (g) \leftrightharpoons 2 \ce{NO_2}$ estimate the
+equilibrium composition at 25 $^\circ$C and 1 bar if you start with pure
+\ce{N_2O_4} and $\Delta G = 4.73$ kJ/mol for these conditions. Demonstrate that
+your solution is consistent with the given information.
+
+
+* Solution
+Let the reaction be \ce{A \leftrightharpoons 2B}.
+
+The key here is to solve the equation \(K = \frac{a_B^2}{a_A}\) where $a_i$ is the activity of the species at equilibrium.
+
+It is convenient to express the activity in mole fractions because we are given information in the form of pressures:
+
+$a_j = x_j P/P0$.
+
+Then we can define the mole fractions in terms of reaction extent.
+
+\begin{align*}
+x_j &=& \frac{N_j}{N_T} \\
+    &=& \frac{N_{j0} + \xi \alpha_j}{N_T0 + \xi \alpha} \\
+    &=& \frac{y_{j0} + \xi' \alpha_j}{1 + \xi' \alpha}
+\end{align*}
+
+where \alpha is $\sum_j \alpha_j$. This avoids needing to define a basis volume which is needed if you try to use activities in terms of concentration.
+
+#+BEGIN_SRC python
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import fsolve
+
+alpha = 2 + (-1)  # overall mole change
+P = 1.0 # bar
+
+G = 4730.0      # reaction energy J/mol
+T = 273.15 + 25 # K
+R = 8.314       # J/mol/K
+
+K = np.exp(-G / R / T)
+
+ya0 = 1.0
+yb0 = 0.0
+
+def get_y(xi):
+    y_A = (ya0 + xi * (-1))/(1 + xi * alpha)
+    y_B = (yb0 + xi * (2))/(1 + xi * alpha)
+    return y_A, y_B
+
+def objective(xi):
+    y_A, y_B = get_y(xi)
+    return K - (y_B * P)**2 / (y_A * P)
+
+xi_eq, = fsolve(objective, 0.2)
+ya, yb = get_y(xi_eq)
+
+print 'Equilibrium composition is y_A = {0}, y_B = {1}'.format(ya, yb)
+print 'Equilibrium reaction extent = {0}'.format(xi_eq)
+print 'Conversion = ',xi_eq/ya0
+#+END_SRC
+
+#+RESULTS:
+: Equilibrium composition is y_A = 0.681933527223, y_B = 0.318066472777
+: Equilibrium reaction extent = 0.189107635723
+: Conversion =  0.189107635723
+
+** A solution using concentration
+It is possible to use concentration, but you must calculate the activity correctly. In concentration terms $a_j = \gamma_j C_j / C_0$. We may assume that the gases are ideal, so that $\gamma_j = 1$. However, we need the correct standard concentration. The key issue here is that the equilibrium constant was defined with a standard state of 1 bar, so we must use the corresponding concentration to get the correct answer.
+
+Then, we must realize that the volume is not constant, because the pressure is constant and the number of moles is changing. Consequently, $C_j \ne C_{j0} + \alpha_j \xi_j$. We have to use $N_j = N_{j0} + \alpha_j \xi_j$, then compute the volume that corresponds to $N_{total}$, so we can compute the concentrations that go into the equilibrium constant. We have to assume an initial volume to compute the initial number of moles.  Finally, we need a very different initial guess for the equilibrium reaction extent. It will be very small in this case, because the number of moles in our assumed volume is very low.
+
+#+BEGIN_SRC python
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import fsolve
+
+alpha = 2 + (-1)  # overall mole change
+P = 1.0 # bar
+
+G = 4730.0      # reaction energy J/mol
+T = 273.15 + 25 # K
+R = 8.314       # J/mol/K
+
+K = np.exp(-G / R / T)
+
+P0 = PA0 = 1.0 # bar
+C0 = CA0 = P0 / (R * T)
+
+V0 = 1.0
+Na0 = CA0 * V0
+Nb0 = 0.0
+
+def objective(xi):
+    Na = Na0 + xi * (-1)
+    Nb = Nb0 + xi * (2)
+    Nt = Na + Nb
+    V = Nt * R * T / P0
+    Ca = Na / V
+    Cb = Nb / V
+    z = K - (Cb/C0)**2 / (Ca/C0)
+    return z
+
+xi_eq, = fsolve(objective, 0.1*Na0)
+
+Na = Na0 + xi_eq * (-1)
+Nb = Nb0 + xi_eq * (2)
+Nt = Na + Nb
+
+print 'ya = {0} yb = {1}'.format(Na/Nt, Nb / Nt)
+
+#$ Finally, you can see we get the same answer, but it takes more work this way. Mole fractions are much easier!
+#+END_SRC
+
+#+RESULTS:
+: ya = 0.681933527223 yb = 0.318066472777

@@ -1,0 +1,101 @@
+#+ASSIGNMENT: eb-batch
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-12-02 Wed>
+
+The reaction $\ce{A + B <=> C}$ is carried out in an adiabatic, constant volume batch reactor. The rate law is
+
+r = k1 * C_A**0.5 * C_B**0.5 - k2 * C_C
+
+Initial temperature = 100 degC
+k1 (373K) = 2e-3 1/s           E1 = 100 kJ/mol
+k2 (373K) = 3e-5 1/s           E2 = 150 kJ/mol
+CA0 = 0.1 mol / L              CpA = 25 J/mol/K
+CB0 = 0.125 mol / L            CpB = 25 J/mol/K
+Hrx (298K) = -40 kJ /mol A     CpC = 40 J/mol/K
+
+
+a) Plot the concentrations and temperature as a function of time.
+b) Plot the equilibrium conversion as a function of temperature
+#+BEGIN_SRC python
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+k10 = 2e-3  # 1/s           
+k20 = 3e-5  # 1/s           
+Ca0 = 0.1  # mol / L              
+Cb0 = 0.125 # mol / L            
+Hrx = -40000  # J /mol
+
+E1 = 100000  # J/mol
+E2 = 150000  # J/mol
+
+CpA = 25  # J/mol/K
+CpB = 25  # J/mol/K
+CpC = 40  # J/mol/K
+
+T0 = 100+273.15 # K
+R = 8.314 # J/K/mol
+
+def bat(C,t):
+    Ca,Cb,Cc,T = C
+    
+    k1 = k10*np.exp(-E1/R*(1.0/T-1.0/T0))
+    k2 = k20*np.exp(-E2/R*(1.0/T-1.0/T0))
+    
+    r = k1*Ca**0.5*Cb**0.5-k2*Cc
+    dCp=CpC-CpA-CpB
+    Hrxn = Hrx + dCp*(T-T0)
+    dCadt = -r
+    dCbdt = -r
+    dCcdt = r
+    dTdt = -(Hrxn*r)/(Ca*CpA+Cb*CpB+Cc*CpC)
+    return [dCadt, dCbdt, dCcdt, dTdt]
+C0 = [Ca0, Cb0, 0, T0]
+tspan = np.linspace(0,20)
+sol = odeint(bat,C0,tspan)
+plt.figure(1)
+plt.plot(tspan,sol[:,0:3])
+plt.legend(['A','B','C'])
+plt.xlabel('Time [S]')
+plt.ylabel('Concentration [M]')
+plt.savefig('figure1.png')
+plt.figure(2)
+plt.plot(tspan,sol[:,3])
+plt.xlabel('Time [S]')
+plt.ylabel('Temperature [K]')
+plt.savefig('figure2.png')
+Tspan = np.linspace(T0,800)
+Cov = []
+for thisT in Tspan:
+    C0 = [Ca0,Cb0,0,thisT]
+    sol = odeint(bat,C0,tspan)
+    Cov.append((Ca0-sol[-1,0])/Ca0)
+plt.figure(3)
+plt.plot(Tspan,Cov)
+plt.xlabel('Temperature [K]')
+plt.ylabel('Equilibrium Conversion')
+plt.savefig('figure3.png')
+
+
+#+END_SRC
+
+#+RESULTS:
+
+[[.\figure1.png]]
+
+[[.\figure2.png]]
+
+[[.\figure3.png]]
+The temperature goes up quickly with the reaction, and the reverse reaction rate constant is more sensitive to the high temperature, hence goes large.
+
+The energy data of this reaction seems unreasonable because the entropy at 373k equals -40.75 kJ/mol while the difference between E1 and E2 is -50 kJ/mol. They should equals to each other.
+#+TURNED-IN: Wed Dec  2 16:00:39 2015
+
+* Grade
+#+technical: A-
+#+presentation: A
+#+GRADE: 0.865
+#+GRADED-BY: 

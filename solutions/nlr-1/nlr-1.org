@@ -1,0 +1,57 @@
+#+ASSIGNMENT: nlr-1
+#+POINTS: 3
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: [2015-10-22 Thu 23:59]
+
+The reaction $A \rightarrow B + C$ was carried out in a batch reactor. The following data was acquired. Use nonlinear regression to find the reaction order and rate constant with 95% confidence intervals.
+
+#+BEGIN_SRC python
+import numpy as np
+t = np.array([0, 5, 9, 15, 22, 30, 40, 60], dtype=np.float)  # minutes
+Ca = np.array([2, 1.6, 1.35, 1.1, 0.87, 0.70, 0.53, 0.35], dtype=np.float) # mol / L
+#+END_SRC
+
+
+* Solution
+This is a straight forward nonlinear fitting problem. We have to fit the nonlinear function r = k*Ca**alpha by some means. I like fitting to the ode best, and here is my solution:
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+
+t = np.array([0, 5, 9, 15, 22, 30, 40, 60], dtype=np.float)  # minutes
+Ca = np.array([2, 1.6, 1.35, 1.1, 0.87, 0.70, 0.53, 0.35], dtype=np.float) # mol / L
+
+def ode(ca, t, k, alpha):
+    return -k * ca**alpha
+
+def model(t, k, alpha):
+    Ca0 = Ca[0]
+    Casol = odeint(ode, Ca0, t, args=(k, alpha))
+    return Casol[:,0]
+
+from pycse import nlinfit
+guess = [0.1, 1]
+p, pint, se = nlinfit(model, t, Ca, guess)
+
+k, alpha = p
+kint, alphaint = pint
+print 'k = {0} {1}'.format(k, kint)
+print 'alpha = {0} {1}'.format(alpha, alphaint)
+
+import matplotlib.pyplot as plt
+plt.plot(t, Ca, 'bo')
+plt.plot(t, model(t, *p))
+plt.xlabel('Time (min)')
+plt.ylabel('Ca (mol/L)')
+plt.savefig('soln.png')
+#+END_SRC
+
+#+RESULTS:
+: k = 0.0329334364424 [ 0.03238295  0.03348393]
+: alpha = 1.52722997977 [ 1.475081    1.57937896]
+
+Always check your fit! Both parameters look significant because neither interval contains zero.
+
+[[./soln.png]]

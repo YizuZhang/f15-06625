@@ -1,0 +1,104 @@
+#+ASSIGNMENT: exam-3-mrxns
+#+POINTS: 5
+#+CATEGORY: exam3
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-12-09 Wed 10:20>
+
+Xylene exists in three isomers: ortho, meta and para-xylene. These isomers can be interconverted as follows:
+
+O -> M       k1
+M -> O       k2
+O -> P       k3
+
+Suppose an equimolar feed of O and M is fed at a total molar flow of 2 mol/min to a packed bed reactor with a total concentration of 2 mol/L. The packed bed reactor has 60 kg of catalyst in an ambient temperature heat exchanger with Ta = 500K, and a heat transfer constant of 16 J / min / degC / kgcat.
+
+Additional information:
+all heat capacities are 100 J / mol / K
+
+dHrx1 = -1800 J / mol o-xylene
+dHrx2 = -1100 J / mol o-xylene
+k1 = 0.5 exp(2 * (1 - 320 / T))  L/kgcat/min
+Kc = 10 exp (4.8 * (430/T - 1.5))
+k2 = k1 / Kc
+k3 = 0.005 exp(4.6*(1 - 460 / T)) L/kgcat/min
+
+T0 = 330 K
+Ta = 500 K
+Ua = 16 J / kgcat / min / degC
+
+Determine the maximum concentration of ortho-xylene in the reactor, and explain why there is a maximum.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+Hrx1 = -1800.0   # J / mol o-xylene
+Hrx2 = -1100.0   # J / mol o-xylene
+
+T0 = 330.0   # K
+Ft0 = 2.0    # mol / min
+Ct0 = 2.0    # mol / L
+v0 = Ft0 / Ct0
+
+Ta = 500.0  # K
+Ua = 16.0   # J / kgcat / min / degC
+
+Cpo = Cpm = Cpp = 100.0  # J / mol / K
+
+Fo0 = Fm0 = 0.5*Ft0
+
+def pfr(Y,V):
+    Fo,Fm,Fp,T = Y
+    v = v0*T/T0
+    Co = Fo/v
+    Cm = Fm/v
+    Cp = Fp/v
+    
+    k1 = 0.5 *np.exp(2 * (1 - 320.0 / T))
+    Kc = 10*np.exp(4.8*(430.0/T-1.5))
+    k2 = k1/Kc
+    k3 = 0.005*np.exp(4.6*(1-460.0/T))
+    
+    r1 = k1*Co
+    r2 = k2*Cm
+    r3 = k3*Co
+    
+    ro = -r1+r2-r3
+    rm = r1-r2
+    rp = r3
+    
+    dFodV = ro
+    dFmdV = rm
+    dFpdV = rp
+    Qdot = Ua*(Ta-T)
+    dTdV = (-Hrx1*r1+Hrx1*r2-Hrx2*r3+Qdot)/(Fo*Cpo+Fm*Cpm+Fp*Cpp)
+    return [dFodV,dFmdV,dFpdV,dTdV]
+
+Vspan = np.linspace(0,100)
+Y0 = [Fo0,Fm0,0,T0]
+
+sol =odeint(pfr,Y0,Vspan)
+Fa = sol[:,0]
+T = sol[:,3]
+v = v0*T/T0
+Ca = Fa/v
+
+plt.plot(Vspan,Ca)
+plt.xlabel('Volume ')
+plt.ylabel('Concontration [M]')
+plt.savefig('figure.png')
+#[[.\figure.png]]
+#+END_SRC
+
+#+RESULTS:
+
+From the result we can see there's a maximum of A concentration in the reactor, it is about 0.85M
+The maximum is because of the first consumption of o and then near the equrilibrium between o and m, this reaction is faster than the third reaction. Hence a peak comes here. But when time goes larger, the slow reaction that consumption of o becomes dominate and concentration goes down.
+#+TURNED-IN: Wed Dec  9 10:14:27 2015
+
+* Grade
+#+technical: A+
+#+presentation: A+
+#+GRADE: 0.950
+#+GRADED-BY: 

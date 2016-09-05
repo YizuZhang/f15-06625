@@ -1,0 +1,120 @@
+#+ASSIGNMENT: creative-1
+#+POINTS: 3
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-18 Fri>
+
+1. Use the knowledge you have learned so far in this class to create a new, original problem that combines Python and reaction engineering. You should describe the problem in enough detail that another student could solve it.
+
+2. Provide a full explanation and solution to your problem, including the Python code. Use full sentences, and proper grammar in your solution. Put comments in your code where needed to describe what the code does.
+
+elisp:org-toggle-latex-overlays
+1.
+There are a series reactions:
+$A \rightarrow B \rightarrow C$
+
+$-r_A = k_1 C_A$, $k_1 = 0.5$ 1/hr
+$-r_B = k_2 C_B$, $k_2 = 0.2$ 1/hr
+
+Problem a:
+There is a continuously stirred tank reactor, which is well mixted. The reactor volume is 10L, and the mentioned reactions occurred.
+$A$ flows in at a molar flow rate of 4 mol/hr and volumetric flow rate of 2.5 L/hr. There's no other flow in the reactor.
+Try to solve out the steady-state exit concentrations of $A$ and $B$.
+
+Problem b:
+There is another plug flow reactor with A flowing in at flow rate of 4 mol/hr and volumetric flow rate of 2.5 L/hr.
+Try to solve the exit concentration of A and B.
+
+
+2.
+Problem a:
+
+The mole balance in this system:
+\begin{align}
+Accumulation &=& In - Out + Generation - Consumption \\
+\frac{dN_A}{dt} &=& F_{A0} - F_A + V r_A\\
+\frac{dN_B}{dt} &=& F_{B0} - F_B - V r_A + v r_B
+\end{align}
+
+for this steady-state system
+
+\(0 = F_{A0} - F_A + V r_A = F_{A0} - v_0 C_A - V k_1 C_A\)
+\(0 = -F_B - V r_A + V r_B = -v_0 C_B - V k_2 C_B + V k_1 C_A \)
+
+#+BEGIN_SRC python
+from scipy.optimize import fsolve
+k1 = 0.5  # 1/hr
+k2 = 0.2  # 1/hr
+v0 = 2.5  # L/hr
+V = 10    # L
+FA0 = 4.0 # mol/hr
+def fun1(CA):
+    return FA0 - v0 * CA - V * k1 * CA
+
+guess = 2.0
+ans1, = fsolve(fun1, guess)
+def fun2(CB):
+    return -v0 * CB - V * k2 * CB + V * k1 * ans1
+ans2, = fsolve(fun2, guess)
+
+print(' CA = {0:1.2f} mol/L \n CB = {1:1.2f} mol/L '. format(ans1,ans2))
+#+END_SRC
+
+#+RESULTS:
+:  CA = 0.53 mol/L
+:  CB = 0.59 mol/L
+
+Problem b:
+
+
+We have:
+\(\frac{dN_A}{dt} = F_A |_V - F_A |_{V + \Delta V} + \Delta V r_A\)
+
+\(\frac{dN_B}{dt} = F_B |_V - F_B |_{V + \Delta V} - \Delta V r_A + \Delta V r_B\)
+
+
+For steady state, in the limit of $\Delta V \rightarrow 0$, we get:
+\(\frac{dF_A}{dV} = r_A = -k_1 C_A\)
+
+\(\frac{dF_B}{dV} = -r_A + r_B\)
+
+#+BEGIN_SRC python
+from scipy.integrate import odeint
+
+FA0 = 4.0 # mol/hr
+V = 10    # L
+v0 = 2.5  # L/hr
+k1 = 0.5  # 1/hr
+k2 = 0.25 # 1/hr
+
+def ode1(FA, V):
+    CA = FA / v0;
+    return -k1 * CA
+
+def ode2(FB, V)
+
+Vspan = [0, 10]
+sol = odeint(ode1, FA0, Vspan)
+FA_exit = sol[-1,0]
+print(' Exit concentration of A = {0:1.2f} mol/L'.format(FA_exit/v0))
+#+END_SRC
+
+#+RESULTS:
+:  Exit concentration of A = 0.22 mol/L
+
+## I try to solve it but it seems beyond my ability. I can only solve the concentration of A. The concentration of A is nested in B, which I cant solve.
+
+But from the calculation we can see, for the same condition (reaction kinetics and reactor volume), the efficiency of PFR reactor is higher than that of CSTR.
+#+TURNED-IN: Fri Sep 18 18:21:19 2015
+
+* feedback
+[[elisp:(goto-char 2623)][(jkitchin) line 93:]] ?
+
+[[elisp:(goto-char 2914)][(jkitchin) line 105:]] true, why did you try it then!
+
+
+* Grade
+#+technical: B
+#+presentation: A
+#+GRADE: 0.760
+#+GRADED-BY: John Kitchin

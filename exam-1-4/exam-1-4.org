@@ -1,0 +1,74 @@
+#+ASSIGNMENT: exam-1-4
+#+POINTS: 4
+#+CATEGORY: exam1
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-07 Wed 10:20>
+
+The following reaction \ce{A \rightarrow B} occurs in a CSTR. The feed concentration is 6 mol/L, the feed rate is 3 L/min, and the volume of the reactor is 5.5 L. The rate law is given as \(r_A = \frac{-25 C_A}{2 + C_A + 5 Ca^2}\) with overall units of mol / L / min.
+
+The mole balance for this reactor can be expressed as:
+
+\( \nu/V (C_{A0} - C_A) = -r_A\)
+
+1. Plot the left hand and right hand sides of the equation above as a function of concentration over the range of 0 to 6L. Comment on what you observe and what it means.
+
+2. Quantitatively estimate the exit conversion of A. Discuss your solution.
+
+#+BEGIN_SRC python
+import numpy as np
+import matplotlib.pyplot as plt
+
+Ca0 = 6.0  # mol / L
+V = 5.5    # L
+nu = 3.0   # L / min
+Fafeed = 6 # mol/L
+
+Cspan = np.linspace(0,6)
+lhs = nu/V*(Ca0-Cspan)
+ra = -25* Cspan/(2+Cspan+5* Cspan**2)
+rhs = -ra
+plt.plot(Cspan, lhs)
+plt.plot(Cspan, rhs)
+plt.legend(['left','right'])
+plt.xlabel('concentration[mol/L]')
+plt.ylabel('value')
+plt.savefig('soln.png')
+
+# [[./soln.png]]
+
+from scipy.optimize import fsolve
+def func(Ca):
+    lhs = nu/V*(Ca0-Ca)
+    rhs = 25* Ca/(2+Ca+5* Ca**2)
+    return  lhs-rhs
+guess1 = 10
+ans, = fsolve(func, guess1)
+con1 = (Ca0 - ans)/Ca0
+print ('The conversion is {}'.format(con1))
+guess2 = 0
+ans2, = fsolve(func, guess2)
+con2 = (Ca0 - ans2)/Ca0
+print ('The conversion is {}'.format(con2))
+
+#+END_SRC
+
+#+RESULTS:
+: The conversion is 0.378527633053
+: The conversion is 0.936540777717
+
+
+#+TURNED-IN: Wed Oct  7 10:19:52 2015
+this rate law of reaction may lead to multiple stead state in this reactor.
+and the finally conversion may be different because of the different initial concentration.
+
+* feedback
+[[elisp:(goto-char 1657)][(jkitchin) line 59:]] typo
+
+#+NTYPOS: 1[[elisp:(goto-char 1131)][(jkitchin) line 35:]] please save figures so they show in line. '[['+'./soln.png]]'
+
+
+* Grade
+#+technical: A
+#+presentation: A-
+#+GRADE: 0.885
+#+GRADED-BY: John Kitchin

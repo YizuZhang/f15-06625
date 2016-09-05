@@ -1,0 +1,95 @@
+#+ASSIGNMENT: exam-1-5
+#+POINTS: 5
+#+CATEGORY: exam1
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-07 Wed 10:20>
+
+In a semi-batch reactor, consider a reactor of $A + B \rightarrow C$. We start with 5 L of $B$ at a concentration of 2.5 mol/L in a 10 L reactor. We add $A$ at a rate of $0.1 L / min$ at a concentration of 1.5 mol/L. The rate law is given as $r = k C_A C_B^2$ with $k = 0.033$ L^2/mol^2/min. After the reactor is full, it becomes a batch reactor. Plot the concentration profile for each species in this reactor from 0 to 100 minutes.
+
+#+BEGIN_SRC python
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+k = 0.033      # L^2/mol^2/min
+CB0 = 2.5      # mol / L
+Cafeed = 1.5   # mol /L
+v0 = 0.1       # L / min
+V0 = 5.0       # L
+
+def func(N,t):
+    Na, Nb, Nc, V = N
+    Ca = Na/V
+    Cb = Nb/V
+    Cc = Nc/V
+    ra = -k* Ca*Cb**2
+    rb = ra
+    dNadt = ra*V + Cafeed * v0
+    dNbdt = rb * V
+    dNcdt = -ra * V
+    dVdt = v0
+    return [dNadt,dNbdt,dNcdt,dVdt]
+
+tspan = np.linspace(0,50)
+N0 = [0,CB0*V0,0,V0]
+sol = odeint(func, N0, tspan)
+Nac = sol[:,0]
+Nbc = sol[:,1]
+Ncc = sol[:,2]
+Vc = sol[:,3]
+
+Cac = Nac/Vc
+Cbc = Nbc/Vc
+Ccc = Ncc/Vc
+plt.plot(tspan,Cac)
+plt.plot(tspan,Cbc)
+plt.plot(tspan,Ccc)
+plt.legend(['A', 'B', 'C'])
+
+
+# then the last 50 min
+Ca1= Cac[-1]
+Cb1=Cbc[-1]
+Cc1= Ccc[-1]
+
+def ode(Ca,t):
+    x = (Ca-Ca1)/-1
+    Cb = Cb1-x
+    Cc = Cc1 + x
+    ra = -k* Ca*Cb**2
+    dCadt = ra
+    return dCadt
+tspan = np.linspace(0,50)
+sol = odeint(ode,Ca1,tspan)
+#plt.plot(tspan,sol)
+x = (sol-Ca1)/-1
+Cb2 = Cb1-x
+Cc2 = Cc1 + x
+tspan1 = tspan+50
+plt.plot(tspan1, sol,'b',tspan1, Cb2,'g',tspan1, Cc2,'r')
+plt.legend(['A', 'B', 'C'])
+plt.xlabel('time[min]')
+plt.ylabel('concentration [mol/L]')
+plt.savefig('sol.png')
+# [[./sol.png]]
+
+
+#+END_SRC
+
+#+RESULTS:
+
+#+TURNED-IN: Wed Oct  7 10:20:00 2015
+
+* feedback
+[[elisp:(goto-char 1873)][(jkitchin) line 76:]] you have to save figures.
+
+
+* Grade
+#+technical: A
+#+presentation: B
+#+GRADE: 0.840
+#+GRADED-BY: John Kitchin
+#+LATE: Your assignment was late. You may be subject to a 50% penalty in the future.

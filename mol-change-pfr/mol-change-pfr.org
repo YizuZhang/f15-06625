@@ -1,0 +1,57 @@
+#+ASSIGNMENT: mol-change-pfr
+#+POINTS: 2
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-09-22 Tue>
+
+5 mol / min of species A flows into into a 100 L plug flow reactor. Only 1 mol / min of A flows out of the reactor. Assuming that the reaction 2A \rightarrow B occurs, with a rate law of -rA = k C_A^2, and k = 2 L / mol / min, what volumetric flow rate is required to observe this?
+
+dFA/dV = -rA
+-rA* dFA = dV
+So we can integrate equation and use fsolve to get the solution.
+#+BEGIN_SRC python
+from scipy.integrate import quad
+from scipy.optimize import fsolve
+
+Fa0 = 5 # mol/min
+Fa_exit = 1 # mol/min
+k = 2 # L/ mol/ min
+V = 100 # L
+
+def func(v0):
+    
+    def integrand(Fa):            # define reaction extent
+        x = (Fa -Fa0)/(-2)        # define reaction extent
+        Fb = x*1                  # B mole flowrate 
+        Ft = Fa + Fb              # total mole flow rate
+        v=v0*Ft/Fa0               # total volumetric flow rate
+        Ca = Fa/v                 # concentration of A
+        ra = -k * Ca**2           # reaction rate law
+        return 1.0/ ra
+        
+    I1,e1 = quad(integrand, Fa0, Fa_exit)
+    return I1-V
+guess = 20
+
+sol, = fsolve(func,guess)
+
+print ('When feed volumetic flowrate is {0:1.2f} m3/min, the requiremnts of A is satisfied'.format(sol))
+
+#+END_SRC
+
+#+RESULTS:
+: When feed volumetic flowrate is 22.33 m3/min, the requiremnts of A is satisfied
+
+#+TURNED-IN: Tue Sep 22 21:29:14 2015
+
+* feedback
+[[elisp:(goto-char 1398)][(harithirumalai) line 43:]] Wrong units.
+
+[[elisp:(goto-char 443)][(harithirumalai) line 9:]] Whar are your assumptions?
+
+
+* Grade
+#+technical: A-
+#+presentation: A
+#+GRADE: 0.865
+#+GRADED-BY: Hari Thirumalai

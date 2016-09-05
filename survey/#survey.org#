@@ -1,0 +1,416 @@
+#+ASSIGNMENT: survey
+#+POINTS: 2
+#+CATEGORY: participation
+#+RUBRIC: (("participation" . 1.0))
+#+DUEDATE: <2015-10-08 Thu>
+
+* Emacs crashes
+
+please list the computer model you use here:
+
+Please check all that apply (click between [ ] to select)
+
+- [ ] Emacs crashes all the time
+- [ ] Emacs crashes when I turn an assignment in
+- [X] Emacs crashes every once in a while
+- [ ] Emacs never crashes
+
+If it does crash, please describe in as much detail as you can what you were doing when it crashed. If you have any ideas on why it is crashing, please let me know.
+
+
+
+Please run this code block (it may take a minute or two):
+
+#+BEGIN_SRC python
+import os
+
+print os.system('systeminfo')
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+
+Host Name:                 GAO-PC
+OS Name:                   Microsoft Windows 7 Enterprise
+OS Version:                6.1.7601 Service Pack 1 Build 7601
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          Gao
+Registered Organization:   Carnegie Mellon University
+Product ID:                55041-008-1656361-86029
+Original Install Date:     8/20/2015, 1:32:57 PM
+System Boot Time:          10/7/2015, 2:29:09 PM
+System Manufacturer:       LENOVO
+System Model:              qqqq05U
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 42 Stepping 7 GenuineIntel ~2501 Mhz
+BIOS Version:              LENOVO 83ET76WW (1.46 ), 7/5/2013
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-05:00) Eastern Time (US & Canada)
+Total Physical Memory:     8,075 MB
+Available Physical Memory: 5,281 MB
+Virtual Memory: Max Size:  16,149 MB
+Virtual Memory: Available: 11,814 MB
+Virtual Memory: In Use:    4,335 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\GAO-PC
+Hotfix(s):                 334 Hotfix(s) Installed.
+                           [01]: KB2849697
+                           [02]: KB2849696
+                           [03]: KB2841134
+                           [04]: KB2670838
+                           [05]: KB971033
+                           [06]: KB917607
+                           [07]: KB2506143
+                           [08]: KB2476490
+                           [09]: KB2479943
+                           [10]: KB2487335
+                           [11]: KB2488113
+                           [12]: KB2491683
+                           [13]: KB2496898
+                           [14]: KB2503658
+                           [15]: KB2505438
+                           [16]: KB2506014
+                           [17]: KB2506212
+                           [18]: KB2506628
+                           [19]: KB2506928
+                           [20]: KB2509553
+                           [21]: KB2511250
+                           [22]: KB2511455
+                           [23]: KB2515325
+                           [24]: KB2522422
+                           [25]: KB2524375
+                           [26]: KB2525694
+                           [27]: KB2529073
+                           [28]: KB2533552
+                           [29]: KB2534366
+                           [30]: KB2536275
+                           [31]: KB2536276
+                           [32]: KB2541014
+                           [33]: KB2544893
+                           [34]: KB2545698
+                           [35]: KB2547666
+                           [36]: KB2552343
+                           [37]: KB2556532
+                           [38]: KB2560656
+                           [39]: KB2563227
+                           [40]: KB2564958
+                           [41]: KB2570947
+                           [42]: KB2579686
+                           [43]: KB2584146
+                           [44]: KB2585542
+                           [45]: KB2603229
+                           [46]: KB2604115
+                           [47]: KB2604521
+                           [48]: KB2607576
+                           [49]: KB2618301
+                           [50]: KB2618451
+                           [51]: KB2619339
+                           [52]: KB2620704
+                           [53]: KB2620712
+                           [54]: KB2621440
+                           [55]: KB2624668
+                           [56]: KB2631813
+                           [57]: KB2639308
+                           [58]: KB2640148
+                           [59]: KB2640696
+                           [60]: KB2641690
+                           [61]: KB2644615
+                           [62]: KB2645640
+                           [63]: KB2647753
+                           [64]: KB2653956
+                           [65]: KB2654428
+                           [66]: KB2655992
+                           [67]: KB2656356
+                           [68]: KB2656411
+                           [69]: KB2657025
+                           [70]: KB2658846
+                           [71]: KB2659262
+                           [72]: KB2660075
+                           [73]: KB2660649
+                           [74]: KB2661254
+                           [75]: KB2667402
+                           [76]: KB2676562
+                           [77]: KB2677070
+                           [78]: KB2679255
+                           [79]: KB2685811
+                           [80]: KB2685813
+                           [81]: KB2685939
+                           [82]: KB2690533
+                           [83]: KB2691442
+                           [84]: KB2698365
+                           [85]: KB2699779
+                           [86]: KB2705219
+                           [87]: KB2709630
+                           [88]: KB2709981
+                           [89]: KB2712808
+                           [90]: KB2718704
+                           [91]: KB2719857
+                           [92]: KB2719985
+                           [93]: KB2726535
+                           [94]: KB2727528
+                           [95]: KB2729094
+                           [96]: KB2729452
+                           [97]: KB2732059
+                           [98]: KB2732487
+                           [99]: KB2732500
+                           [100]: KB2735855
+                           [101]: KB2736233
+                           [102]: KB2736422
+                           [103]: KB2739159
+                           [104]: KB2741355
+                           [105]: KB2742599
+                           [106]: KB2743555
+                           [107]: KB2749655
+                           [108]: KB2750841
+                           [109]: KB2753842
+                           [110]: KB2756921
+                           [111]: KB2757638
+                           [112]: KB2758857
+                           [113]: KB2760730
+                           [114]: KB2761217
+                           [115]: KB2762895
+                           [116]: KB2763523
+                           [117]: KB2769369
+                           [118]: KB2770660
+                           [119]: KB2773072
+                           [120]: KB2775511
+                           [121]: KB2778344
+                           [122]: KB2785220
+                           [123]: KB2786081
+                           [124]: KB2786400
+                           [125]: KB2789645
+                           [126]: KB2790113
+                           [127]: KB2790655
+                           [128]: KB2791765
+                           [129]: KB2794119
+                           [130]: KB2798162
+                           [131]: KB2799494
+                           [132]: KB2799926
+                           [133]: KB2800095
+                           [134]: KB2803821
+                           [135]: KB2804579
+                           [136]: KB2807986
+                           [137]: KB2808679
+                           [138]: KB2808735
+                           [139]: KB2809215
+                           [140]: KB2809900
+                           [141]: KB2813170
+                           [142]: KB2813347
+                           [143]: KB2813430
+                           [144]: KB2813956
+                           [145]: KB2820197
+                           [146]: KB2820331
+                           [147]: KB2823180
+                           [148]: KB2830290
+                           [149]: KB2832414
+                           [150]: KB2833946
+                           [151]: KB2834140
+                           [152]: KB2834886
+                           [153]: KB2835361
+                           [154]: KB2835364
+                           [155]: KB2836502
+                           [156]: KB2836942
+                           [157]: KB2836943
+                           [158]: KB2839894
+                           [159]: KB2840149
+                           [160]: KB2840631
+                           [161]: KB2843630
+                           [162]: KB2844286
+                           [163]: KB2845187
+                           [164]: KB2845690
+                           [165]: KB2846960
+                           [166]: KB2847077
+                           [167]: KB2847311
+                           [168]: KB2847927
+                           [169]: KB2849470
+                           [170]: KB2850851
+                           [171]: KB2852386
+                           [172]: KB2853952
+                           [173]: KB2859537
+                           [174]: KB2861191
+                           [175]: KB2861698
+                           [176]: KB2861855
+                           [177]: KB2862152
+                           [178]: KB2862330
+                           [179]: KB2862335
+                           [180]: KB2862966
+                           [181]: KB2862973
+                           [182]: KB2863058
+                           [183]: KB2863240
+                           [184]: KB2864058
+                           [185]: KB2864202
+                           [186]: KB2868038
+                           [187]: KB2868116
+                           [188]: KB2868623
+                           [189]: KB2868626
+                           [190]: KB2871997
+                           [191]: KB2872339
+                           [192]: KB2876284
+                           [193]: KB2876331
+                           [194]: KB2882822
+                           [195]: KB2884256
+                           [196]: KB2887069
+                           [197]: KB2888049
+                           [198]: KB2891804
+                           [199]: KB2892074
+                           [200]: KB2893294
+                           [201]: KB2893519
+                           [202]: KB2894844
+                           [203]: KB2898857
+                           [204]: KB2900986
+                           [205]: KB2904266
+                           [206]: KB2908783
+                           [207]: KB2911501
+                           [208]: KB2912390
+                           [209]: KB2913152
+                           [210]: KB2918077
+                           [211]: KB2918614
+                           [212]: KB2919469
+                           [213]: KB2922229
+                           [214]: KB2926765
+                           [215]: KB2928562
+                           [216]: KB2929437
+                           [217]: KB2929733
+                           [218]: KB2929755
+                           [219]: KB2931356
+                           [220]: KB2937610
+                           [221]: KB2939576
+                           [222]: KB2943357
+                           [223]: KB2952664
+                           [224]: KB2957189
+                           [225]: KB2957503
+                           [226]: KB2957509
+                           [227]: KB2961072
+                           [228]: KB2962872
+                           [229]: KB2965788
+                           [230]: KB2966583
+                           [231]: KB2968294
+                           [232]: KB2970228
+                           [233]: KB2971850
+                           [234]: KB2972100
+                           [235]: KB2972211
+                           [236]: KB2972280
+                           [237]: KB2973112
+                           [238]: KB2973201
+                           [239]: KB2973337
+                           [240]: KB2973351
+                           [241]: KB2976627
+                           [242]: KB2976897
+                           [243]: KB2977292
+                           [244]: KB2977728
+                           [245]: KB2978120
+                           [246]:
+Network Card(s):           3 NIC(s) Installed.
+                           [01]: Intel(R) 82579LM Gigabit Network Connection
+                                 Connection Name: Local Area Connection
+                                 Status:          Media disconnected
+                           [02]: Intel(R) Centrino(R) Advanced-N 6205
+                                 Connection Name: Wireless Network Connection
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     172.19.35.6
+                                 IP address(es)
+                                 [01]: 128.237.140.176
+                                 [02]: fe80::1d7e:3504:afab:954
+                           [03]: Cisco AnyConnect Secure Mobility Client Virtual Miniport Adapter for Windows x64
+                                 Connection Name: Local Area Connection 2
+                                 Status:          Hardware not present
+0
+#+end_example
+
+
+Please run this code block
+#+BEGIN_SRC emacs-lisp
+(ta-describe)
+(with-current-buffer "*techela describe*" (buffer-string))
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+Name:
+Userid = tianyug1
+Email: Gao@GAO-PC
+System: windows-nt
+Window system: w32
+temporary-file-directory = c:/Users/Gao/AppData/Local/Temp/
+~/ located at: c:/Users/Gao/AppData/Roaming/
+git located at: c:/Program Files (x86)/Git/cmd/git.exe
+ssh located at: c:/Program Files (x86)/Git/bin/ssh.exe
+python located at: c:/users/administrator/appdata/local/enthought/canopy/user/scripts/python.exe
+
+jmax installed at: c:/Users/Gao/AppData/Local/jmax/
+jmax current commit: 37f8b1bd516acc53fe27809e2363b107d7820c58
+jmax tag: 4.0
+
+.techela contains:
+#+BEGIN====================================================================
+{"user-mail-address":"tianyug1@andrew.cmu.edu","userid":"tianyug1","user-full-name":"Tianyu Gao"}
+#+END====================================================================
+
+
+techela-config contains:
+#+BEGIN====================================================================
+Host techela.cheme.cmu.edu
+  User f15-06625
+  IdentityFile c:/Users/Gao/AppData/Roaming/techela/f15-06625/tianyug1
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+
+#+END====================================================================
+
+
+tianyug1.pub contains:
+#+BEGIN====================================================================
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3hM0LC88odzBJ6U7x8oHEausKJx4fGv87ZM2HvtGkZVy4/j2HchCkMahkDLPN455/V7/S54LiZCF6XQ3RmnpXbNGcIqqMpbWcKGCEhOOQLqQ1OPnupjLZoWrUpo3wndBQlBu29dDWBKj+TXrM6ZEUSknwNeA3i/qj6CWyE1Bunh9y7KTkwXTxSvyW4cYtcz8rB7yLxok9FBsPbkzBsG3BG4FmH2rqsk4I47zXqg/xUvTd1CnH6FAz10tLgwc8OkTrF6Em9/mcx7ljncnQAzJf4HbrMwpUA1pi5c7Vv/MwuvO9wyTOdoRzJ0ujM7YzRO2Qu+OZytpsFFh6yBwQ2ZDT Gao@GAO-PC
+
+#+END====================================================================
+
+#+end_example
+
+
+
+
+* Font/equation size
+** Would you prefer the font size in Emacs to be:
+   :PROPERTIES:
+   :ANSWER:   bigger
+   :ID:       8D8A5914-8A4F-46F3-A622-AD18D4287C6D
+   :END:
+
+[[mc:smaller]]     [[mc:bigger]]   [[mc:It is fine]]
+# you chose bigger
+** Would you prefer the rendered equation images in Emacs to be:
+   :PROPERTIES:
+   :ID:       F22573A7-6415-42F1-8DF4-853767758C2C
+   :ANSWER:   bigger
+   :END:
+
+[[mc:smaller]]     [[mc:bigger]]   [[mc:It is fine]]
+# you chose bigger
+* List any problems you are having with Emacs/jmax/techela
+Crashes too often.
+
+* List any ways you think Emacs/jmax/techela could be made more useful to you
+when writing code, it would be better if it is possible to indent automatically.
+
+* List any problems you are having with the course materials
+None, but I need to work harder.
+#+TURNED-IN: Wed Oct  7 19:10:58 2015
+
+* Grade
+#+participation: P
+#+GRADE: 1.000
+#+GRADED-BY: John Kitchin
+  #+BEGIN_SRC python
+
+  #+END_SRC
+
+  #+RESULTS:
+

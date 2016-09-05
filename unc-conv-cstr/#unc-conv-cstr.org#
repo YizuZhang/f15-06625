@@ -1,0 +1,61 @@
+#+ASSIGNMENT: unc-conv-cstr
+#+POINTS: 4
+#+CATEGORY: homework
+#+RUBRIC: (("technical" . 0.7) ("presentation" . 0.3))
+#+DUEDATE: <2015-10-28 Wed 23:59>
+
+Chemicals $\ce{A}$ and $\ce{B}$ form $\ce{C}$ in the following equilibrium reaction:
+
+$\ce{A + B <=>[k_{1}][k_{2}] 2C}$
+
+The liquid-phase reaction takes place in a CSTR with a volume of 10 L. The inlet stream has a volumetric flow rate of 1.5 L/s which has a 50/50 molar composition of chemicals $\ce{A}$ and $\ce{B}$ at a total concentration of 1 M. The rate constants are $k_{1} = 60.0 \pm 6.0 \frac{L}{mol \cdot s}$ and $k_{2} = 35.0 \pm 4.0 \frac{L}{mol \cdot s}$.
+
+1. At steady state, determine the mean exit concentration of $\ce{C}$ and its 95% confidence interval.
+
+2. If the reactor was designed to achieve 40% conversion of reactants, how likely is that to happen with this configuration? Discuss the tradeoffs in increasing the probability of success.
+#+BEGIN_SRC python
+import uncertainties as u
+from scipy.optimize import fsolve
+import numpy as np
+
+V = 10 # L 
+v0 = 1.5 # L/s
+Ca0 = 0.5 # mol/L
+Cb0 = 0.5 # mol/L
+Cc0 = 0
+Fa0 = v0 * Ca0
+
+N = 10000
+k1 = np.random.normal(60.0,6.0,N) # L/mol/s
+k2 = np.random.normal(35.0,4.0,N) # L/mol/s
+sol = np.empty(k1.shape)
+for i in range (N):
+    def cstr(Cc):
+        x = (Cc-Cc0)/(2)
+        Cb = Cb0 - x
+        Ca = Ca0 - x
+        ra = -Ca*Cb*k1[i] + Cc**2 *k2[i]
+        return Fa0 - Ca*v0 + V*ra
+    
+    guess = 0.1
+    sol[i] = fsolve(cstr,guess)[0]
+
+# For standard normal distribution 
+alpha = 0.05
+inv = [np.mean(sol)-1.96*np.std(sol), np.mean(sol)+1.96*np.std(sol)]
+Ca_exit = Ca0 - np.mean(sol)/2
+conv = (Ca0-Ca_exit)/Ca0
+print ('The eixt concentration is {0} M'.format(np.mean(sol)))
+print ('The 95% confidence interval is {0}'.format(inv))
+print ('Conversion is {0}%'.format(conv*100))
+
+#+END_SRC
+
+#+RESULTS:
+: The eixt concentration is 0.39574836747 M
+: The 95% confidence interval is [0.35965256098835763, 0.43184417395136787]
+: Conversion is 39.574836747%
+
+Now in this configuration, the chance of this conversion happened is approximately 50%. 
+Since the reaction has reached the equilibrium, the only way to increase this probability is to change the reaction equilibrium constant, maybe raise the temperature.
+#+TURNED-IN: Thu Oct 29 15:28:10 2015
