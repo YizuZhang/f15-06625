@@ -10,7 +10,7 @@ The mole balance for this reactor can be expressed as:
 
 \( \nu/V (C_{A0} - C_A) = -r_A\)
 
-1. Plot the left hand and right hand sides of the equation above as a function of concentration over the range of 0 to 6L. Comment on what you observe and what it means.
+1. Plot the left hand and right hand sides of the equation above as a function of concentration over the range of 0 to 6 mol/L. Comment on what you observe and what it means.
 
 2. Quantitatively estimate the exit conversion of A. Discuss your solution.
 
